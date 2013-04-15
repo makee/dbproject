@@ -1,3 +1,6 @@
+<?php
+	include('connect.php');
+?>
 <html>
 <head>
 	<title>Test</title>
