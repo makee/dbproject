@@ -7,7 +7,7 @@ $db = "olympics";
 try {
 //	$conn = new PDO( "mysql:host=$host;dbname=$db", $user, $pwd);
 //    $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-	$conn = new PDO ( "sqlsrv:server = tcp:hyprus176b.database.windows.net,1433; Database = olympics", "www-data", "GR13db..");
+	$conn = new PDO ( "sqlsrv:server = tcp:hyprus176b.database.windows.net,1433; Database = olympics", "gr13", "Db13indaplace..");
     $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
     }
 catch(Exception $e){
