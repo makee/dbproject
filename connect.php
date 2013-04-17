@@ -18,5 +18,7 @@ catch(Exception $e){
 
 /*$conn = new PDO( "mysql:host=$host;dbname=$db", $user, $pwd);
 $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );*/
+	$conn = new PDO ( "sqlsrv:server = tcp:hyprus176b.database.windows.net,1433; Database = olympics", "gr13", "DB13indaplace..");
+    $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 global $conn;
 ?>
