@@ -65,9 +65,11 @@ $queryCreate = array(
 		FOREIGN KEY (did) REFERENCES Discipline(did),
 		FOREIGN KEY (gid) REFERENCES Game(gid)
 	);");
-
+$i = 1;
 foreach ($queryCreate as $query){
-	$conn->query($query);
+	if ($i > 1)
+		$conn->query($query);
+	$i ++;
 }
 
 $queryShowTables = "SHOW TABLES FROM olympics";
