@@ -1,12 +1,12 @@
 <?php
 $queryCreate = array(
-	"CREATE TABLE IF NOT EXISTS Sport
+	"CREATE TABLE Sport
 	(
 		sid CHAR (7) NOT NULL,
 		sname CHAR (40) NOT NULL,
 		PRIMARY KEY (sid)
 	);",
-	"CREATE TABLE IF NOT EXISTS Discipline
+	"CREATE TABLE Discipline
 	(
 		did CHAR (7) NOT NULL,
 		dname CHAR (60) NOT NULL,
@@ -14,13 +14,13 @@ $queryCreate = array(
 		PRIMARY KEY (did),
 		FOREIGN KEY (sid) REFERENCES Sport (sid)
 	);",
-	"CREATE TABLE IF NOT EXISTS Country
+	"CREATE TABLE Country
 	(
 		iocCode CHAR (3) NOT NULL,
 		cname CHAR (40) NOT NULL,
 		PRIMARY KEY (iocCode)
 	);",
-	"CREATE TABLE IF NOT EXISTS Game
+	"CREATE TABLE Game
 	(
 		gid CHAR (8) NOT NULL,
 		year CHAR (4) NOT NULL,
@@ -30,13 +30,13 @@ $queryCreate = array(
 		PRIMARY KEY (gid),
 		FOREIGN KEY (iocCode) REFERENCES Country(iocCode)
 	);",
-	"CREATE TABLE IF NOT EXISTS Athlete
+	"CREATE TABLE Athlete
 	(
 		aid CHAR (7) NOT NULL,
 		aname CHAR (30) NOT NULL,
 		PRIMARY KEY (aid)
 	);",
-	"CREATE TABLE IF NOT EXISTS Participation
+	"CREATE TABLE Participation
 	(
 		aid CHAR (7) NOT NULL,
 		did CHAR (7) NOT NULL,
@@ -47,7 +47,7 @@ $queryCreate = array(
 		FOREIGN KEY (did) REFERENCES Discipline(did),
 		FOREIGN KEY (gid) REFERENCES Game(gid)
 	);",
-	"CREATE TABLE IF NOT EXISTS Represents
+	"CREATE TABLE Represents
 	(
 		aid CHAR (7) NOT NULL,
 		iocCode CHAR (3) NOT NULL,
@@ -57,7 +57,7 @@ $queryCreate = array(
 		FOREIGN KEY (iocCode) REFERENCES Country(iocCode),
 		FOREIGN KEY (gid) REFERENCES Game(gid)
 	);",
-	"CREATE TABLE IF NOT EXISTS eventOf
+	"CREATE TABLE eventOf
 	(
 		did CHAR (7) NOT NULL,
 		gid CHAR (8) NOT NULL,
