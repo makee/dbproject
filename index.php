@@ -1,6 +1,6 @@
 <?php
 	include('connect.php');
-//	include('ddl.php');
+	include('ddl.php');
 ?>
 <html>
 <head>
