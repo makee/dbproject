@@ -10,7 +10,7 @@ $queryCreate = array(
 	(
 		did CHAR (7) NOT NULL,
 		dname CHAR (60) NOT NULL,
-		sid CHAR (20) NOT NULL,
+		sid CHAR (7) NOT NULL,
 		PRIMARY KEY (did),
 		FOREIGN KEY (sid) REFERENCES Sport (sid)
 	);",
