@@ -71,7 +71,7 @@ foreach ($queryCreate as $query){
 		$conn->query($query);
 	$i ++;
 }
-
+/*
 $queryShowTables = "SHOW TABLES FROM olympics";
 $tables = $conn->query($queryShowTables);
 $disp = "<table>";
@@ -86,4 +86,5 @@ foreach ($tables->fetchAll() as $table){
 }
 $disp .= "</table>";
 echo $disp;
+*/
 ?>
