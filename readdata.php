@@ -173,7 +173,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 
 		elseif ($debug)
 			echo $athl;
 		$ct ++;
-		if ($ct > 5) break;
+//		if ($ct > 5) break;
 		if (time()-$begin >290) break;
 	}
 }
