@@ -136,7 +136,6 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Game")->fetchColumn() == 0)
 		echo "</table>";
 }
 $arry = "UCS-4*, UCS-4BE, UCS-4LE*, UCS-2, UCS-2BE, UCS-2LE, UTF-32*, UTF-32BE*, UTF-32LE*, UTF-16*, UTF-16BE*, UTF-16LE*, UTF-7, UTF7-IMAP, UTF-8*, ASCII*, EUC-JP*, SJIS*, eucJP-win*, SJIS-win*, ISO-2022-JP, ISO-2022-JP-MS, CP932, CP51932, JIS-ms, CP50220, CP50220raw, CP50221, CP50222, ISO-8859-1*, ISO-8859-2*, ISO-8859-3*, ISO-8859-4*, ISO-8859-5*, ISO-8859-6*, ISO-8859-7*, ISO-8859-8*, ISO-8859-9*, ISO-8859-10*, ISO-8859-13*, ISO-8859-14*, ISO-8859-15*, byte2be, byte2le, byte4be, byte4le, BASE64, HTML-ENTITIES, 7bit, 8bit, EUC-CN*, CP936, GB18030**, HZ, EUC-TW*, CP950, BIG-5*, EUC-KR*, UHC (CP949), ISO-2022-KR, Windows-1251 (CP1251), Windows-1252 (CP1252), CP866 (IBM866), KOI8-R*";
-
 unset($athlete[0]);
 
 if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 0 || 1)
@@ -160,8 +159,9 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 
 //			$athl = htmlentities($athl);
 			echo "INSERT INTO Athlete (aid, aname) VALUES ('$AID', '$athl')<br>";
 			$stmmt = $conn->prepare("SELECT COUNT(aid) FROM athlete WHERE aname LIKE ?");
-			$stmmt->execute(array($athl));
+			$stmmt->execute(array("%$athl%"));
 			$nb =  $stmmt->fetchColumn();
+			unset($stmmt);
 			echo $nb;
 			if ($nb == 0)
 			{
@@ -173,7 +173,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 
 		elseif ($debug)
 			echo $athl;
 		$ct ++;
-		//if ($ct > 5) break;
+		if ($ct > 5) break;
 		if (time()-$begin >290) break;
 	}
 }
@@ -185,7 +185,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 	echo "<table>";
 	foreach ($medals as $medal)
 	{
-		if ($ct > 7385)
+		if ($ct < 10)
 		{
 			$coun = $medal[0];
 			$spo = $medal[1];
@@ -205,27 +205,27 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 			$seas = preg_replace(array('/winter/i', '/summer/i'), array('w', 's'), $seas[0]);
 			$med = preg_replace(array('/Gold medal/i', '/Silver medal/i', '/Bronze medal/i', '/^$/'), array(1, 3, 3, 0), $med); 
 			$medGID = $conn->query("SELECT gid FROM Game WHERE year = '$ye[0]' AND season = '$seas'")->fetchColumn();
-			$medIOC = $conn->prepare("SELECT iocCode FROM Country WHERE cname = ?");
+			$medIOC = $conn->prepare("SELECT iocCode FROM Country WHERE cname LIKE ?");
 			$medIOC->execute(array($coun));
 			$medIOC = $medIOC->fetchColumn();
-			$medDS = $conn->prepare("SELECT d.did, s.sid FROM Discipline d, Sport s WHERE dname LIKE ? AND d.sid = s.sid AND s.sname = ?");
+			$medDS = $conn->prepare("SELECT d.did, s.sid FROM Discipline d, Sport s WHERE dname LIKE ? AND d.sid = s.sid AND s.sname LIKE ?");
 			$medDS->execute(array("$disc%", $spo));
 			$medDS = $medDS->fetch(PDO::FETCH_NUM);
 				if (empty($medDS))
 				{
-					$medSID = $conn->prepare("SELECT sid FROM sport WHERE sname = ?");
+					$medSID = $conn->prepare("SELECT sid FROM sport WHERE sname LIKE ?");
 					$medSID->execute(array($spo));
 					$medSID = $medSID->fetchColumn();
 					if (empty($medSID))
 					{
-						$stmt = $conn->prepare("INSERT INTO Sport (sid, sname) VALUES (?, ?)");
+					//	$stmt = $conn->prepare("INSERT INTO Sport (sid, sname) VALUES (?, ?)");
 						$medSID = IDgen($spo, 'Sport', 'sid');
-						$stmt->execute(array($medSID, $spo));
+					//	$stmt->execute(array($medSID, $spo));
 						echo " Sport created: $spo<br>";
 					}
-					$stmt = $conn->prepare("INSERT INTO Discipline (did, dname, sid) VALUES (?, ?, ?)");
+					//$stmt = $conn->prepare("INSERT INTO Discipline (did, dname, sid) VALUES (?, ?, ?)");
 					$medDID = IDgen($disc, 'Discipline', 'did', true);
-					$stmt->execute(array($medDID, $disc, $medSID));
+					//$stmt->execute(array($medDID, $disc, $medSID));
 					echo " Discipline created: $spo/$disc<br>";
 					//echo "Missing $disc<br>";
 				}
@@ -238,7 +238,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 			for ($zz=5; $zz<count($medal)-1; $zz++)
 			{
 				$medAID = $conn->prepare("SELECT aid FROM Athlete WHERE aname LIKE ?");// COLLATE utf8_general_ci");
-				$medAID->execute(array("$medal[$zz]"));
+				$medAID->execute(array(utf8_encode($medal[$zz])));
 				$medAID = $medAID->fetchColumn();
 				if (!$medAID)
 				{
@@ -248,20 +248,23 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 				{
 					if (!$conn->query("SELECT aid FROM Participation where aid = '$medAID' AND did = '$medDID' AND gid = '$medGID'")->fetchColumn())
 					{
-						$statmnt = $conn->prepare("INSERT INTO Participation (aid, did, gid, medal) VALUES (?, ?, ?, ?)");
-						$statmnt->execute(array($medAID, $medDID, $medGID, $med));
+					//	$statmnt = $conn->prepare("INSERT INTO Participation (aid, did, gid, medal) VALUES (?, ?, ?, ?)");
+					//	$statmnt->execute(array($medAID, $medDID, $medGID, $med));
 					}
 				}
 				if ($zz != 5)
 					$athstr .= "<br>";
 				$athstr .= $medAID;
 			}
-			//echo "<tr><td>$medGID</td><td>$medIOC</td><td>$medSID</td><td>$medDID</td><td>$med</td><td>$athstr</td></tr>";
+			echo "<tr><td>$medGID</td><td>$medIOC</td><td>$medSID</td><td>$medDID</td><td>$med</td><td>$athstr</td></tr>";
+
+//			echo "<tr><td>$medGID</td><td>$medIOC</td><td>$spo</td><td>$disc</td><td>$med</td><td></td></tr>";
 		}
 		$ct++;
 	}
 	echo "</table>";
 }
+*/
 /*
 if ($reimport || $conn->query("SELECT COUNT(*) FROM Represents")->fetchColumn() == 0)
 {
