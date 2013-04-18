@@ -173,11 +173,12 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 
 		elseif ($debug)
 			echo $athl;
 		$ct ++;
-		if ($ct > 5) break;
+		//if ($ct > 5) break;
 		if (time()-$begin >290) break;
 	}
 }
 /*
+unset($medals[0]);
 if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn() == 0 || 1)
 {
 	$ct = 1;
@@ -250,10 +251,10 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 						$statmnt = $conn->prepare("INSERT INTO Participation (aid, did, gid, medal) VALUES (?, ?, ?, ?)");
 						$statmnt->execute(array($medAID, $medDID, $medGID, $med));
 					}
-				}///
-				/*if ($zz != 5)
+				}
+				if ($zz != 5)
 					$athstr .= "<br>";
-				$athstr .= $medAID;//
+				$athstr .= $medAID;
 			}
 			//echo "<tr><td>$medGID</td><td>$medIOC</td><td>$medSID</td><td>$medDID</td><td>$med</td><td>$athstr</td></tr>";
 		}
