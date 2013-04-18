@@ -157,13 +157,19 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 
 			//$athl = mb_convert_encoding($athl, 'UCS-4', $arry);
 			echo mb_detect_encoding($athl) . "<br>";
 //			$athl = htmlentities($athl);
-			echo "INSERT INTO Athlete (aid, aname) VALUES ('$AID', '$athl')l<br>";
-			$conn->prepare("INSERT INTO Athlete (aid, aname) VALUES (?, ?)")->execute(array($AID, $athl));
+			echo "INSERT INTO Athlete (aid, aname) VALUES ('$AID', '$athl')<br>";
+			$stmmt = $conn->prepare("SELECT COUNT(aid) FROM athlete WHERE aname LIKE ?");
+			$stmmt->execute(array($athl));
+			$nb =  $stmmt->fetchColumn();
+			if ($nb == 0)
+				$conn->prepare("INSERT INTO Athlete (aid, aname) VALUES (?, ?)")->execute(array($AID, $athl));
+			unset($stmmt);
 		}
 		elseif ($debug)
 			echo $athl;
 		$ct ++;
-		//if ($ct > 5) break;
+		if ($ct > 5) break;
+		phpinfo();
 	}
 }
 /*
