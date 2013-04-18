@@ -169,7 +169,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 
 			echo $athl;
 		$ct ++;
 		if ($ct > 5) break;
-		phpinfo();
+		if (time()-$begin >290) break;
 	}
 }
 /*
