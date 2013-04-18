@@ -134,18 +134,32 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Game")->fetchColumn() == 0)
 	if ($debug)
 		echo "</table>";
 }
-if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 0)
+$ary[] = "ASCII";
+$ary[] = "JIS";
+$ary[] = "EUC-JP";
+$ary[] = "UTF-8";
+unset($athlete[0]);
+
+if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 0 || 1)
 {
+	$ct = 1;
 	foreach ($athlete as $athletee)
 	{
 		$athl = $athletee[0];
 		if ($athl != NULL && $athl != 'name' && $athl != "")
 		{
 			$AID = IDGen($athl, 'Athlete', 'aid', true);
+			/*$encoAthl = mb_detect_encoding($athl, $ary);
+			echo $encoAthl . ": ";
+			$athl = mb_convert_encoding($athl, "UCS-2", $encoAthl);
+			echo  mb_detect_encoding($athl, $ary). " - $athl <br>";*/
 			$conn->prepare("INSERT INTO Athlete (aid, aname) VALUES (?, ?)")->execute(array($AID, $athl));
 		}
 		elseif ($debug)
 			echo $athl;
+		$ct ++;
+		if ($ct > 5)
+			break;
 	}
 }
 /*
