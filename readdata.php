@@ -154,7 +154,8 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 
 			$athl = mb_convert_encoding($athl, "UCS-2", $encoAthl);
 			echo  mb_detect_encoding($athl, $ary). " - $athl <br>";*/
 			echo "$athl: ";
-		//	$athl = utf8_encode($athl);
+			$athl = utf8_encode($athl);
+			$athl = utf8_decode($athl);
 			echo "$athl<br>";
 			$conn->query("INSERT INTO Athlete (aid, aname) VALUES (N'$AID', N'$athl')");
 		}
