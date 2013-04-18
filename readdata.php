@@ -4,6 +4,7 @@ $begin = time();
 $reimport = false;
 $debug = false;
 
+set_time_limit(1000000);
 
 function readCSV($csvFile)
 {
@@ -161,14 +162,18 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 
 			$stmmt = $conn->prepare("SELECT COUNT(aid) FROM athlete WHERE aname LIKE ?");
 			$stmmt->execute(array($athl));
 			$nb =  $stmmt->fetchColumn();
+			echo $nb;
 			if ($nb == 0)
-				$conn->prepare("INSERT INTO Athlete (aid, aname) VALUES (?, ?)")->execute(array($AID, $athl));
+			{
+				$statement = $conn->prepare("INSERT INTO Athlete (aid, aname) VALUES (?, ?)");
+				$statement->execute(array($AID, $athl));
+			}
 			unset($stmmt);
 		}
 		elseif ($debug)
 			echo $athl;
 		$ct ++;
-		//if ($ct > 5) break;
+		if ($ct > 5) break;
 		if (time()-$begin >290) break;
 	}
 }
