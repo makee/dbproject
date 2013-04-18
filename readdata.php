@@ -163,7 +163,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 
 		elseif ($debug)
 			echo $athl;
 		$ct ++;
-		if ($ct > 10) break;
+		//if ($ct > 10) break;
 	}
 }
 /*
