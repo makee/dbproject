@@ -142,6 +142,7 @@ unset($athlete[0]);
 
 if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 0 || 1)
 {
+	$ct = 1;
 	foreach ($athlete as $athletee)
 	{
 		$athl = $athletee[0];
@@ -153,12 +154,14 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 
 			$athl = mb_convert_encoding($athl, "UCS-2", $encoAthl);
 			echo  mb_detect_encoding($athl, $ary). " - $athl <br>";*/
 			echo "$athl: ";
-			$athl = utf8_encode($athl);
+		//	$athl = utf8_encode($athl);
 			echo "$athl<br>";
-			$conn->prepare("INSERT INTO Athlete (aid, aname) VALUES (N?, N?)")->execute(array($AID, $athl));
+			$conn->query("INSERT INTO Athlete (aid, aname) VALUES (N'$AID', N'$athl')");
 		}
 		elseif ($debug)
 			echo $athl;
+		$ct ++;
+		//if ($ct > 5) break;
 	}
 }
 /*
