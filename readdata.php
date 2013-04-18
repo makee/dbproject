@@ -141,40 +141,46 @@ unset($athlete[0]);
 if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 0 || 1)
 {
 	$ct = 1;
+	$stt = $conn->query("SELECT COUNT(*) FROM athlete");
+	$numRow = $stt->fetchColumn();
+	unset($stt);
 	foreach ($athlete as $athletee)
 	{
-		$athl = $athletee[0];
-		if ($athl != NULL && $athl != 'name' && $athl != "")
+		if ($ct > $numRow -100)
 		{
-			$AID = IDGen($athl, 'Athlete', 'aid', true);
-			/*$encoAthl = mb_detect_encoding($athl, $ary);
-			echo $encoAthl . ": ";
-			$athl = mb_convert_encoding($athl, "UCS-2", $encoAthl);
-			echo  mb_detect_encoding($athl, $ary). " - $athl <br>";*/
-			echo "$athl: ";
-			$athl = utf8_encode($athl);
-		//	$athl = iconv('','UTF-8',$athl);
-			//$athl = mb_convert_encoding($athl, 'UCS-4', $arry);
-			echo mb_detect_encoding($athl) . "<br>";
-//			$athl = htmlentities($athl);
-			echo "INSERT INTO Athlete (aid, aname) VALUES ('$AID', '$athl')<br>";
-			$stmmt = $conn->prepare("SELECT COUNT(aid) FROM athlete WHERE aname LIKE ?");
-			$stmmt->execute(array("%$athl%"));
-			$nb =  $stmmt->fetchColumn();
-			unset($stmmt);
-			echo $nb;
-			if ($nb == 0)
-			{
-				$statement = $conn->prepare("INSERT INTO Athlete (aid, aname) VALUES (?, ?)");
-				$statement->execute(array($AID, $athl));
-			}
-			unset($stmmt);
+				$athl = $athletee[0];
+				if ($athl != NULL && $athl != 'name' && $athl != "")
+				{
+					$AID = IDGen($athl, 'Athlete', 'aid', true);
+					/*$encoAthl = mb_detect_encoding($athl, $ary);
+					echo $encoAthl . ": ";
+					$athl = mb_convert_encoding($athl, "UCS-2", $encoAthl);
+					echo  mb_detect_encoding($athl, $ary). " - $athl <br>";*/
+					echo "$athl: ";
+					$athl = utf8_encode($athl);
+				//	$athl = iconv('','UTF-8',$athl);
+					//$athl = mb_convert_encoding($athl, 'UCS-4', $arry);
+					echo mb_detect_encoding($athl) . "<br>";
+		//			$athl = htmlentities($athl);
+					echo "INSERT INTO Athlete (aid, aname) VALUES ('$AID', '$athl')<br>";
+					$stmmt = $conn->prepare("SELECT COUNT(aid) FROM athlete WHERE aname LIKE ?");
+					$stmmt->execute(array("%$athl%"));
+					$nb =  $stmmt->fetchColumn();
+					unset($stmmt);
+					echo $nb;
+					if ($nb == 0)
+					{
+						$statement = $conn->prepare("INSERT INTO Athlete (aid, aname) VALUES (?, ?)");
+						$statement->execute(array($AID, $athl));
+					}
+					unset($stmmt);
+				}
+				elseif ($debug)
+					echo $athl;
 		}
-		elseif ($debug)
-			echo $athl;
 		$ct ++;
-//		if ($ct > 5) break;
-		if (time()-$begin >290) break;
+		//		if ($ct > 5) break;
+		//		if (time()-$begin >290) break;
 	}
 }
 /*
