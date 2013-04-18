@@ -155,9 +155,10 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 
 			echo  mb_detect_encoding($athl, $ary). " - $athl <br>";*/
 			echo "$athl: ";
 			$athl = utf8_encode($athl);
-			$athl = utf8_decode($athl);
+			$athl = htmlentities($athl);
+			//$athl = iconv('','UTF-8',$athl);
 			echo "$athl<br>";
-			$conn->query("INSERT INTO Athlete (aid, aname) VALUES (N'$AID', N'$athl')");
+			$conn->query("INSERT INTO Athlete (aid, aname) VALUES ('$AID', '$athl')");
 		}
 		elseif ($debug)
 			echo $athl;
