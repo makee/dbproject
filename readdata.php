@@ -157,13 +157,13 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 
 			$athl = utf8_encode($athl);
 			$athl = htmlentities($athl);
 			//$athl = iconv('','UTF-8',$athl);
-			echo "$athl<br>";
-			$conn->query("INSERT INTO Athlete (aid, aname) VALUES ('$AID', '$athl')");
+			echo "INSERT INTO Athlete (aid, aname) VALUES ('$AID', '$athl')l<br>";
+			//$conn->query("INSERT INTO Athlete (aid, aname) VALUES ('$AID', '$athl')");
 		}
 		elseif ($debug)
 			echo $athl;
 		$ct ++;
-		//if ($ct > 5) break;
+		if ($ct > 10) break;
 	}
 }
 /*
