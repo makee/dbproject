@@ -158,7 +158,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 
 			$athl = htmlentities($athl);
 			//$athl = iconv('','UTF-8',$athl);
 			echo "INSERT INTO Athlete (aid, aname) VALUES ('$AID', '$athl')l<br>";
-			//$conn->query("INSERT INTO Athlete (aid, aname) VALUES ('$AID', '$athl')");
+			$conn->query("INSERT INTO Athlete (aid, aname) VALUES ('$AID', '$athl')");
 		}
 		elseif ($debug)
 			echo $athl;
