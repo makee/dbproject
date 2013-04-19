@@ -110,14 +110,11 @@ function getResult()
 	data:{
 		action:'top10',
 		type:'athlete',
-		limit: 1
+		limit: 20
 	},
-	dataType: "json",  
-	success: function(data){
-		alert(data.toSource());
-	}
-
-
+	dataType: "xml",  
+	success: parseXml,
+	error: function(){alert('error');}
 	});
 	
 }
@@ -132,9 +129,8 @@ function loadOnClick()
 }
  
 
-function parseXml(json)
+function parseXml(xml)
 {  
-	/*
 	$(xml).find("athlete").each(function() {   
 		$("#athlete").append('<tr>' + '<td>' + $(this).find("aid").text() + '</td>' + '<td>' + $(this).find("aname").text() + '</td>'+ '<td>' + $(this).find("cname").text() + '</td>' + '<td>' + $(this).find("aname").text() + '</td>' +' </tr>');  
 		$("#loading").hide();  
@@ -155,7 +151,6 @@ function parseXml(json)
 		$("#game").append('<tr>' + '<td>' + $(this).find("gid").text() + '</td>' + '<td>' + $(this).find("year").text() + '</td>'+ '<td>' + $(this).find("season").text() + '</td>' + '<td>' + $(this).find("city").text() + '</td>' + '<td>' + $(this).find("cname").text() + '</td>' +' </tr>');  
 		$("#loading").hide();  
 	});		
-		*/	
 	/*data = $.parseJSON(json);
 	$.each(data, function() {
 	      lang += this['aid'] + "<br/>";
