@@ -17,7 +17,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Discipline")->fetchColumn() 
 			$DID = IDgen($discipline[0], "discipline", "did", true);
 		//	$conn->prepare("INSERT INTO Discipline (did, dname, sid) VALUES ('$DID', ?, '$sportmatch')")->execute(array($discipline[0]));
 		}*/
-		$exp = explodeDiscipline($dis[0], $disc[1]);
+		$exp = explodeDiscipline($discipline[0], $discipline[1]);
 		if ($debug)
 		{
 			echo "<tr>";
