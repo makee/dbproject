@@ -6,7 +6,10 @@ include_once('class.php');
 $_POST = $_GET;
 if (isset($_POST['action']) && $_POST['action'] == "top10" && isset($_POST['type']))
 {
-	$res = Athlete::getAthlete(10);		
+	if(!isset($_POST['limit'](
+		$_POST['limit'] = 10;
+	$limit = $_POST['limit'];
+	$res = Athlete::getAthlete($limit);		
 	$dom = new DomDocument("1.0", "UCS-2");
 	$root = $dom->createElement('result');
 	foreach($res as $re)
