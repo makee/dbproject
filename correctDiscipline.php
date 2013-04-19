@@ -3,7 +3,7 @@ include_once('connect.php');
 include_once('functions.php');
 
 $reimport = true;
-$debug = true;
+$debug = !true;
 if ($reimport || $conn->query("SELECT COUNT(*) FROM Discipline")->fetchColumn() == 0 || 1)
 {
 	$ct = 1;
