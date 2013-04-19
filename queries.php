@@ -10,7 +10,7 @@ if (isset($_POST['action']) && $_POST['action'] == "top10" && isset($_POST['type
 		$_POST['limit'] = 10;
 	$limit = $_POST['limit'];
 	$res = Athlete::getAthlete($limit);		
-	$dom = new DomDocument("1.0", "UTF-8");
+	$dom = new DomDocument("1.0", "UCS-2");
 	$root = $dom->createElement('result');
 	foreach($res as $re)
 	{
