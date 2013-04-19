@@ -4,7 +4,7 @@ include_once('functions.php');
 
 $reimport = true;
 $debug = !true;
-if ($reimport || $conn->query("SELECT COUNT(*) FROM Discipline")->fetchColumn() == 0)
+if ($reimport || $conn->query("SELECT COUNT(*) FROM Discipline")->fetchColumn() == 0 || 1)
 {
 	$ct = 1;
 	if ($debug)
@@ -17,7 +17,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Discipline")->fetchColumn() 
 			$DID = IDgen($discipline[0], "discipline", "did", true);
 		//	$conn->prepare("INSERT INTO Discipline (did, dname, sid) VALUES ('$DID', ?, '$sportmatch')")->execute(array($discipline[0]));
 		}*/
-		$exp = explodeDiscipline($discipline);
+		$exp = explodeDiscipline($dis[0], $disc[1]);
 		if ($debug)
 		{
 			echo "<tr>";
@@ -45,7 +45,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Discipline")->fetchColumn() 
 			}
 			$exec = array_merge((array)$DID, $exp, (array)$sportmatch);
 			echo "<pre>";
-			var_dump($exec);
+			//var_dump($exec);
 			echo "</pre>";
 			$query =  "INSERT INTO Discipline (did, dgender, dminweight, dmaxweight, dwunit, ddist, ddunit, dteam, dcat, dname, sid) VALUES ('$DID', '$dgender', '$dminweight', '$dmaxweight', '$dwunit', '$ddist', '$ddunit', '$dteam', '$dcat', '$drest', '$sportmatch')";
 			$conn->query($query);
