@@ -21,16 +21,16 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Discipline")->fetchColumn() 
 		if ($debug)
 		{
 			echo "<tr>";
-			echo "<td>$discipline[0]</td>";
-			echo "<td>$exp[0]</td>";
-			echo "<td>$exp[1]</td>";
-			echo "<td>$exp[2]</td>";
-			echo "<td>$exp[3]</td>";
-			echo "<td>$exp[4]</td>";
-			echo "<td>$exp[5]</td>";
-			echo "<td>$exp[6]</td>";
-			echo "<td>$exp[7]</td>";
-			echo "<td>$exp[8]</td>";
+			echo "<td>".$discipline[0]."</td>";
+			echo "<td>".$exp['dgender']."</td>";
+			echo "<td>".$exp['dminweight']."</td>";
+			echo "<td>".$exp['dmaxweight']."</td>";
+			echo "<td>".$exp['dwunit']."</td>";
+			echo "<td>".$exp['ddist']."</td>";
+			echo "<td>".$exp['ddunit']."</td>";
+			echo "<td>".$exp['dteam']."</td>";
+			echo "<td>".$exp['dcat']."</td>";
+			echo "<td>".$exp['drest']."</td>";
 			echo "<td>";
 			echo $sportmatch?$sportmatch:$discipline[1];
 			echo "</td>";
@@ -52,7 +52,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Discipline")->fetchColumn() 
 			//echo $conn->prepare("INSERT INTO Discipline (did, dgender, dminweight, dmaxweight, dwunit, ddist, ddunit, dteam, dcat, dname, sid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")->execute($exec)?'oui':'non';
 		}
 		$ct ++;
-//		if($ct > 1) break;
+//		if($ct > 10) break;
 	}
 	if ($debug)
 		echo "</table>";
