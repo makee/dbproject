@@ -13,6 +13,7 @@ if (isset($_POST['action']) && $_POST['action'] == "top10" && isset($_POST['type
 		foreach($re->listAttrib() as $key => $attrib)
 		{
 			$attrib = preg_replace('/ +$/', '', $attrib);
+			$attrib = htmlspecialchars($attrib, ENT_QUOTES, "UTF-8");
 			$elem = $dom->createElement($key, $attrib);
 			$root->appendChild($elem);
 		}
