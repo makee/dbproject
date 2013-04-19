@@ -17,6 +17,7 @@ class Athlete
 			$res = $res->fetch();
 			$this->aid = $res['aid'];
 			$this->aname = $res['aname'];
+			$this->aname = preg_replace('/ +$/', '', $this->aname);
 		}
 	}
 	
