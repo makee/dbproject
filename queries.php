@@ -1,4 +1,5 @@
 <?
+header("Content-Type: text/xml");
 include_once('connect.php');
 include_once('class.php');
 
@@ -20,7 +21,7 @@ if (isset($_POST['action']) && $_POST['action'] == "top10" && isset($_POST['type
 	}
 
 	$dom->appendChild($root);
-	$xmlData = $dom->saveXML();
+	$xmlData = $dom->saveXML($root);
 	echo $xmlData;
 }
 
