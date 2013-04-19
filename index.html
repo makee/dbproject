@@ -1,0 +1,268 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="tinybox/style.css" />
+<script type="text/javascript" src="https://ajax.microsoft.com/ajax/jQuery/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="tinybox/tinybox.js"></script>
+<script type="text/javascript" src="tinybox/packed.js"></script>
+<script type="text/javascript">  
+
+emptyInsert = function(item)
+{
+	if (item.attr("value").match(/^New /g))
+   {
+		item.attr("value", "");
+	}
+}
+
+function dispButtonAdd(){
+	$("div.wrapadd").remove();
+	buttonAdd = $("<div class='wrapadd'><img src='img/addData.png' id='add' class='button add'/></div>");
+	$("table.menu").first().prepend(buttonAdd);
+	$("img.button#add").unbind('click').click(function(){
+	addDataRow();
+	$("div.wrapadd").hide();
+	
+	buttonValid = $("<div class='wrapvalid'><img src='img/validData.png' id='valid' class='button valid'/></div>");
+	$("table.menu").first().prepend(buttonValid);
+		tcurrent.find("thead").first().find("tr").first().children().each(function(){
+		val = $(this).text();
+		str = val.toLowerCase();
+		str = str.replace(/ /g, '');
+		str = str.replace(/id$/g, '');
+	});
+	$("img.button#valid").click(function(){
+		var input = $("input#str").serializeArray();
+	});
+	
+	buttonCancel = $("<div class='wrapcancel'><img src='img/cancelData.png' id='cancel' class='button cancel'/></div>");
+	$("table.menu").first().prepend(buttonCancel);
+	$("img.button#cancel").click(function(){
+		$("table.onglet.current tr.add").toggle();
+		$("img.button").remove();
+		dispButtonAdd();
+		});	
+	});
+}
+
+function tableResult(dir)
+{
+	if(dir)
+	{
+		dispButtonAdd();
+		$("table.menu td:not(.current)").unbind('click').click(function(){
+			//$("div.wrapadd").remove();
+			$("table.onglet tr.add").remove();
+			var current = $(this).attr('targ');
+			$(".onglet.current").toggleClass('current').hide();
+			$("#" + current).show().toggleClass('current');
+			$("table.menu td.current").toggleClass("current");
+			$(this).toggleClass("current");
+			tableResult(true);
+		});
+	}
+	else
+	{
+		$("table.menu td:not(.current)").unbind('click');
+	}
+}
+
+function addDataRow()
+{
+	//dispButtonAdd();
+	current = $("table.menu td.current").attr('targ');
+	tcurrent = $("body").find("table.onglet#"+current);
+	$("table.menu, table.onglet.current").show();
+	if (tcurrent.find("tr.add").length == 0)
+	{
+		tcurrent.prepend($("<tr class='add'></tr>")); // .append($("<form id='addInfo' name='addInfo' method='post'></form>"))
+		tcurrent.find("thead").first().find("tr").first().children().each(function(){
+			val = $(this).text();
+			str = val.toLowerCase();
+			str = str.replace(/ /g, '');
+			len = $(this).width()-30;
+			if (!str.match(/id$/g))
+				$("tr.add").append("<td><input style='width:" + len + "px;' class='addInfo' type='text' id='" + str + "' name='" + str + "' value='New " + val + "...'  onfocus='emptyInsert($(this))'/></td>");
+			else
+				$("tr.add").append("<td></td>");
+		});
+		tableResult(false);
+
+	}
+	else
+	{
+		tcurrent.find("tr.add").toggle();
+		tableResult(true);
+	}
+}
+
+function getResult()
+{
+	$("table.menu, table.onglet.current").show();
+	tableResult(true);
+	$.ajax({  
+	type: "GET",  
+	//url: "results.xml",  
+	url: "queries.php?action=top10&type=athlete",
+	data:{
+		action:'top10',
+		type:'athlete',
+		limit: 1
+	},
+	dataType: "json",  
+	success: function(data){
+		alert(data.toSource());
+	}
+
+
+	});
+	
+}
+
+
+function loadOnClick()
+{
+	$("table.onglet tbody tr:not(.add)").click(function(){
+	TINY.box.show({iframe:'http://www.linkedin.com/pub/guillaume-jornod/52/b8a/215',width:400,height:400,close:false})
+	});
+
+}
+ 
+
+function parseXml(json)
+{  
+	/*
+	$(xml).find("athlete").each(function() {   
+		$("#athlete").append('<tr>' + '<td>' + $(this).find("aid").text() + '</td>' + '<td>' + $(this).find("aname").text() + '</td>'+ '<td>' + $(this).find("cname").text() + '</td>' + '<td>' + $(this).find("aname").text() + '</td>' +' </tr>');  
+		$("#loading").hide();  
+	});  
+	$(xml).find("country").each(function() {   
+		$("#country").append('<tr>' + '<td>' + $(this).find("iocCode").text() + '</td>' + '<td>' + $(this).find("cname").text() + '</td>' +' </tr>');  
+		$("#loading").hide();  
+	});  
+	$(xml).find("sport").each(function() {   
+		$("#sport").append('<tr>' + '<td>' + $(this).find("sid").text() + '</td>' + '<td>' + $(this).find("sname").text() + '</td>' +' </tr>');  
+		$("#loading").hide();  
+	});  
+	$(xml).find("discipline").each(function() {   
+		$("#discipline").append('<tr>' + '<td>' + $(this).find("did").text() + '</td>' + '<td>' + $(this).find("dname").text() + '</td>'+ '<td>' + $(this).find("sname").text() + '</td>' +' </tr>');  
+		$("#loading").hide();  
+	});
+	$(xml).find("game").each(function() {   
+		$("#game").append('<tr>' + '<td>' + $(this).find("gid").text() + '</td>' + '<td>' + $(this).find("year").text() + '</td>'+ '<td>' + $(this).find("season").text() + '</td>' + '<td>' + $(this).find("city").text() + '</td>' + '<td>' + $(this).find("cname").text() + '</td>' +' </tr>');  
+		$("#loading").hide();  
+	});		
+		*/	
+	/*data = $.parseJSON(json);
+	$.each(data, function() {
+	      lang += this['aid'] + "<br/>";
+	  });
+	alert(lang);*/
+	//$("table.onglet tbody tr").append("<td><img src='img/addData.png' class='button'/></td>");
+	/*firstRow = $("table.onglet tbody tr").first();
+	leftPos = firstRow.offset().left;
+	topPos = firstRow.offset().top;
+	len = firstRow.width();
+	finalPos = leftPos + len;
+	$("<img src='img/addData.png' class='button add'/>")
+		.appendTo($("body"))
+		.css({
+			position: "absolute",
+			left: finalPos+"px",
+			top: topPos+"px"
+		});
+	alert(finalPos);return false;*/
+	//$("<img src='img/addData.png' class='button add'/>").appendTo($("div#wrapresult"));
+	loadOnClick();
+
+}; 
+
+
+$(document).ready(function() {  
+	$("table#athlete").toggleClass('current');
+	$("input#search").unbind('click').click(function(){
+		$("table.onglet tbody tr:not(.add)").empty();
+		getResult();
+	});  
+	$("table.menu td[targ='athlete']").addClass("current");
+	$("table").hide();	
+	
+	$("p.advancedsearch").click(function(){
+	TINY.box.show({iframe:'advancedSearch.html',width:400,height:400,close:false})
+	});
+});
+</script>
+
+	<title>The Olympics Database</title>
+
+</head>
+
+<body>
+
+<!-- Search field -->
+    <form>
+	<img src="img/title.png" id="headimg" alt="Header picture"/>
+        <input type="text" id="search" onfocus="if(this.value == 'Search...') { this.value = ''; }" value = "Search..."></input>
+        <label for="search" onclick="obj=document.getElementById('result').scrollIntoView();">Search</label>
+		<p class="advancedsearch">Advanced search</p>
+
+    </form>
+<!-- End search field -->
+
+<a id="result"/>
+
+<!-- Onglets-->
+
+<table class="menu"><tr><td targ="athlete">Athlete</td><td targ="country">Country</td>
+		<td targ="sport">Sport</td><td targ="discipline">Discipline</td><td targ="game">Game</td></tr></table>
+		
+
+<table class="onglet" id="athlete">
+   <thead> <tr><th>ID</th> <th>Name</th><th>Country</th> <th>Sport</th> </tr>
+   </thead>
+   <tbody>
+   </tbody>
+</table>
+
+<table class="onglet" id="country">
+   <thead> <tr><th>IOC Code</th> <th>Name</th> </tr>
+   </thead>
+   <tbody>
+   </tbody>
+</table>
+
+<table class="onglet" id="sport">
+   <thead> <tr><th>ID</th> <th>Name</th> </tr>
+   </thead>
+   <tbody>
+   </tbody>
+</table>
+
+<table class="onglet" id="discipline">
+   <thead> <tr><th>ID</th> <th>Name</th> <th>Sport</th> </tr>
+   </thead>
+   <tbody>
+   </tbody>
+</table>
+
+<table class="onglet" id="game">
+   <thead> <tr><th>ID</th> <th>Year</th>  <th>Season</th> <th>City</th> <th>Country</th></tr>
+   </thead>
+   <tbody>
+   </tbody>
+</table>
+
+<div id="error">
+</div>
+<!-- Get results-->
+
+
+
+<!-- PopUp script -->
+
+
+</body>
+</html> 
