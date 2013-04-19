@@ -3,7 +3,7 @@ include_once('connect.php');
 include_once('functions.php');
 
 $reimport = true;
-$debug = !true;
+$debug = true;
 if ($reimport || $conn->query("SELECT COUNT(*) FROM Discipline")->fetchColumn() == 0 || 1)
 {
 	$ct = 1;
@@ -48,7 +48,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Discipline")->fetchColumn() 
 			//var_dump($exec);
 			echo "</pre>";
 			$query =  "INSERT INTO Discipline (did, dgender, dminweight, dmaxweight, dwunit, ddist, ddunit, dteam, dcat, dname, sid) VALUES ('$DID', '$dgender', '$dminweight', '$dmaxweight', '$dwunit', '$ddist', '$ddunit', '$dteam', '$dcat', ?, '$sportmatch')";
-			$conn->prepare($query)->execute(array($drest));
+			$conn->prepare($query)->execute(array(utf8_encode($drest)));
 			//$conn->query($query);
 			//echo $conn->prepare("INSERT INTO Discipline (did, dgender, dminweight, dmaxweight, dwunit, ddist, ddunit, dteam, dcat, dname, sid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")->execute($exec)?'oui':'non';
 		}
