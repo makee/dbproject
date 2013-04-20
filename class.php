@@ -47,8 +47,8 @@ class Athlete
 	{
 		global $conn;
 		$athl = $name;
-		$athl = utf8_encode($athl);
-		//$athl = htmlentities($athl);
+	//	$athl = utf8_encode($athl);
+	//	$athl = htmlentities($athl);
 		$athl = "%".$athl."%";
 		$query = "SELECT aid, aname FROM athlete WHERE aname LIKE N'$athl'";
 		$stt = $conn->query($query);
@@ -64,10 +64,12 @@ class Athlete
 	{
 		global $conn;
 		$aid = IDgen($aname, "Athlete", "aid", true); 
-		$aname = utf8_encode($aname);
+		//$aname = utf8_encode($aname);
+		//$aname = htmlentities($aname);
 		$test = Athlete::findAthlete($aname);
 		if (!$test)
 		{
+			echo "INSERT INTO Sport (sid, sname) VALUES ('$aid', N'$aname')";
 			$stt = $conn->query("INSERT INTO Sport (sid, sname) VALUES ('$aid', N'$aname')");
 			$athlete = Athlete::findAthlete($aname);
 			return $athlete;
@@ -216,15 +218,36 @@ class Game{
 	public static function findGame($year, $season)
 	{	
 		global $conn;
-		$medGID = $conn->query("SELECT gid, city, iocCode, year, season FROM Game WHERE year = '$year' AND season = '$season'");
+		$query = "SELECT gid, city, iocCode, year, season FROM Game WHERE year = '$year' AND season = '$season'";
+		$medGID = $conn->query($query);
 		$medGID = $medGID->fetchAll(PDO::FETCH_CLASS, "Game");
-		return $medGID[0];
+		if (empty($medGID))
+			return false;
+		else
+			return $medGID[0];
 	}
 
 	public function writeFullGame()
 	{
 		$season = $this->season=="s"?"Summer":"Winter";
 		return "$this->year $season Olympics at $this->city ($this->gid)";
+	}
+
+	public static function insert($year, $season, $city, $iocCode)
+	{
+		global $conn;
+		$test = Game::findGame($year, $season);
+		if ($test)
+			return $test;
+		else
+		{
+			$city = utf8_encode($city);
+			$GID = $year . strtoupper($season) . $iocCode;
+			$query = "INSERT INTO Game (gid, year, season, city, iocCode) VALUES ('$GID', '$year', '$season', '$city', '$iocCode')";
+			$tt = $conn->query($query);
+			$game = Game::findGame($year, $season);
+			return $game;
+		} 
 	}
 
 }	
@@ -243,14 +266,30 @@ class Country
 	public static function findCountry($country)
 	{
 		global $conn;
-		$country = utf8_encode($country);
-		$medIOC = $conn->prepare("SELECT iocCode FROM Country WHERE cname = ? OR LIKE ?");
-		$medIOC->execute(array($country, $country));
+		//$country = utf8_encode($country);
+		$country = "%$country%";
+		$medIOC = $conn->prepare("SELECT iocCode, cname FROM Country WHERE cname LIKE ?");
+		$medIOC->execute(array($country));
 		$medIOC = $medIOC->fetchAll(PDO::FETCH_CLASS, "Country");
 		if (empty($medIOC))
 			return false;
 		else
 			return $medIOC[0];	
+	}
+
+	public static function insert($iocCode, $cname)
+	{
+		global $conn;
+		$test = Country::findCountry($cname);
+		if ($test)
+			return $test;
+		else
+		{
+			$cname = utf8_encode($cname);
+			$country = $conn->query("INSERT INTO Country (iocCode, cname) VALUES ('$iocCode', '$cname')");
+			$country = Country::findCountry($cname);
+			return $country;
+		} 
 	}
 }
 
@@ -267,8 +306,9 @@ class Sport
 	public static function findSport($sname)
 	{
 		global $conn;
-		$spo = $conn->prepare("SELECT * FROM Sport WHERE sname = ? OR LIKE ?");
-		$spo->execute(array($sname, $sname));
+		$sname = "%$sname%";
+		$spo = $conn->prepare("SELECT * FROM Sport WHERE sname LIKE ?");
+		$spo->execute(array($sname));
 		$spo = $spo->fetchAll(PDO::FETCH_CLASS, "Sport");
 		if (empty($spo))
 			return false;
@@ -331,6 +371,37 @@ class Participation
 		}
 		else
 			return $test;
+	}
+}
+
+class Represents
+{
+	public $iocCode;
+	public $aid;
+	public $gid;
+
+	public static function findRepres($iocCode, $aid, $gid)
+	{
+		global $conn;
+		$rep = $conn->query("SELECT * FROM Represents WHERE iocCode = '$iocCode' AND aid = '$aid' AND gid = '$gid'");
+		$rep = $rep->fetchAll(PDO::FETCH_CLASS, "Represents");
+		if (empty($rep))
+			return false;
+		else
+			return $rep[0];	
+	}
+
+	public static function insert($iocCode, $aid, $gid)
+	{
+		global $conn;
+		$rep = Represents::findRepres($iocCode, $aid, $gid);
+		if (!$rep)
+		{
+			$conn->query("INSERT INTO Represents (iocCode, aid, gid) VALUES ('$iocCode', '$aid', '$gid')");
+			$rep = Represents::findRepres($iocCode, $aid, $gid);
+			return $rep;
+		}
+		return $rep;
 	}
 }
 

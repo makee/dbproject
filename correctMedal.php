@@ -50,6 +50,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 				echo $medIOC->iocCode."<br>";
 			else
 				echo "$coun not found<br>";
+			$iocCode = $medIOC->iocCode;
 			$medSID = Sport::findSport($spo);
 			if($medSID)
 			{
@@ -102,8 +103,13 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 				{
 					echo "Missing $medal[$zz]<br>";
 					$newathl = Athlete::insert($medal[$zz]);	
-					echo "Creation of athlete: ".$newathl->aid. " ".$newathl->aname. "<br>";
-					$aid = $newathl->aid;
+					if ($newathl)
+					{
+						echo "Creation of athlete: ".$newathl->aid. " ".$newathl->aname. "<br>";
+						$aid = $newathl->aid;
+					}
+					else
+						echo "Creation failed: ".$medal[$zz]. "<br>";
 				}
 				else
 				{
@@ -115,13 +121,9 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 				$participation = Participation::insert($aid, $did, $gid, $med);
 				echo $participation?"Participation insertion successfully completed<br>":"Participation insertion failed<br>";
 				}
-				/*{
-					if (!$conn->query("SELECT aid FROM Participation where aid = '$medAID' AND did = '$medDID' AND gid = '$medGID'")->fetchColumn())
-					{
-					//	$statmnt = $conn->prepare("INSERT INTO Participation (aid, did, gid, medal) VALUES (?, ?, ?, ?)");
-					//	$statmnt->execute(array($medAID, $medDID, $medGID, $med));
-					}
-				}*/
+				$tt = Represents::insert($iocCode, $aid, $gid);
+				echo "Representation insertion: ";
+				echo $tt?"Success<br>":"Failed";
 			}
 			}
 

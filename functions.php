@@ -49,9 +49,8 @@ if (is_dir($dir))
 	chdir($dir);
 	foreach (glob("*.csv") as $file) 
 	{
-		//if($file == 'medals.csv' || $file == 'participants.csv'){
-		if($file == 'medals.csv' || $file == 'Disciplines.csv'){
-		//if(1){
+		//if($file == 'medals.csv' || $file == 'Disciplines.csv'){
+		if(1){
 			$path_parts = pathinfo($file); 
   		$filename = $path_parts['filename']; 
 		$filename = strtolower($filename);
