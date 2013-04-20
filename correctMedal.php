@@ -88,7 +88,8 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 			if ($create)
 			{
 				$newdisc = Discipline::insert(array_merge($disc, array('sid' => $sid)));		
-				echo "Creation of: ". $newdisc->display()[1]. "(".$newdisc->display()[0].")"."<br>";
+				$write = $newdisc->display();
+				echo "Creation of: ". $write[1]. "(".$write[0].")"."<br>";
 				$did = $newdisc->did;
 			}
 			if($_GET['athl'] == 'oui'){
@@ -103,7 +104,10 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 					$aid = $newathl->aid;
 				}
 				else
+				{
 					$aid = $athlete->aid;
+					echo "Founded $medal[$zz]<br>";
+				}
 				if ($_GET['part'] == 'oui')
 				{
 				$participation = Participation::insert($aid, $did, $gid, $med);
