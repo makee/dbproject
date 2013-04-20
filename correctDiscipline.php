@@ -11,7 +11,8 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Discipline")->fetchColumn() 
 		echo "<table><tr><th>Discipline</th><th>Gender</th><th>Min Weight</th><th>Max Weight</th><th>Wunit</th><th>Distance</th><th>Dunit</th><th>Team ? </th><th>Category</th><th>Rest</th><th>Sport</th>";
 	foreach ($disciplines as $discipline)
 	{
-		$sportmatch = $conn->query("SELECT sid FROM Sport WHERE sname LIKE '$discipline[1]'")->fetchColumn(); 
+	//if ($ct > 183 && $ct < 190){
+		$sportmatch = $conn->query("SELECT sid FROM Sport WHERE sname LIKE '%$discipline[1]%'")->fetchColumn(); 
 		/*if ($sportmatch != NULL )
 		{
 			$DID = IDgen($discipline[0], "discipline", "did", true);
@@ -20,6 +21,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Discipline")->fetchColumn() 
 		$exp = explodeDiscipline($discipline[0], $discipline[1]);
 		if ($debug)
 		{
+	echo $ct;
 			echo "<tr>";
 			echo "<td>".$discipline[0]."</td>";
 			echo "<td>".$exp['dgender']."</td>";

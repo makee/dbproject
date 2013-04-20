@@ -166,10 +166,12 @@ function explodeDiscipline($disc, $spo){
 
 	// Team ?
 	$tt = preg_match('/(Team|Individual|Single|Double|Solo|relay)s?/i', $rest, $team);
-	if($tt > 1)
+	echo "<br>$tt<br>";
+	if($tt > 0)
 	{
 		$team = $team[1];
-		$rest = preg_replace('/(Team|Individual|Single|Double|Solo|relay)s? ?/i', '', $rest);
+		$rest = preg_replace('/(Team|Individual|Single|Double|Solo)s? ?/i', '', $rest);
+		$team = preg_replace(array('/team/i', '/double/', '/relay/i', '/single/i', '/solo/i', '/individual/i'), array('Team', 'Team', 'Team', 'Individual', 'Individual', 'Individual'), $team);
 		$team = strtolower($team);
 		$team = ucfirst($team);
 	}
@@ -201,7 +203,7 @@ function explodeDiscipline($disc, $spo){
 
 	// Unit sanitize
 	if($dunit)
-		$dunit = preg_replace(array('/km?/i', '/metre|ms/i', '/miles?/i', '/yds?|yards?/i'), array('km', 'm', 'mi', 'yd'), $dunit);
+		$dunit = preg_replace(array('/km?/i', '/metres?|ms/i', '/miles?/i', '/yds?|yards?/i'), array('km', 'm', 'mi', 'yd'), $dunit);
 
 	// Rest sanitize
 	$rest = preg_replace('/at the \d{4} (winter|summer) olympics/i', '', $rest);

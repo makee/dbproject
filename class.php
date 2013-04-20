@@ -41,6 +41,91 @@ class Athlete
 		}
 		return $listAthl;
 	}
+	
+	public static function findAthlete($name)
+	{
+		global $conn;
+		$athl = utf8_encode($name);
+		//$athl = htmlentities($athl);
+		$athl = "%".$athl."%";
+		$query = "SELECT aid FROM athlete WHERE aname LIKE ?";
+		$stt = $conn->prepare($query);
+		$stt->execute((array)$athl);
+		$res = $stt->fetchColumn();
+		return $res;
+
+	}
+}
+
+
+class Discipline
+{
+	public $did;
+	public $dgender;
+	public $dminweight;
+	public $dmaxweight;
+	public $dwunit;
+	public $ddist;
+	public $ddunit;
+	public $dteam;
+	public $dcat;
+	public $dname;
+	public $sid;
+
+	public function __construct()
+	{
+		foreach(get_object_vars($this) as $key => $attr)
+			$this->$key = preg_replace('/ +$/', '', $attr);
+	}
+
+	public function display()
+	{
+		switch($this->dgender)
+		{
+			case '0':
+			$this->gender = NULL;
+			break;
+			case '1':
+			$this->gender = "Men's";
+			break;
+			case '2':
+			$this->gender = "Women's";
+			break;			
+		}
+		$disc = "$this->gender $this->dname";
+		if ($this->dminweight == -1 && $this->dmaxweight > -1)
+		{
+			$this->disc .= " -$this->dmaxweight";
+			if ($this->dwunit != "")
+				$disc .= " $this->dwunit";
+		}
+		if ($this->dminweight > -1 && $this->dmaxweight == -1)
+		{
+			$this->disc .= " +$this->dminweight";
+			if ($this->dwunit != "")
+				$disc .= " $this->dwunit";
+		}
+		if ($this->dminweight > -1 && $this->dmaxweight > -1)
+		{
+			$disc .= " $this->dminweight-$this->dmaxweight";
+			if ($this->dwunit != "")
+				$disc .= " $this->dwunit";
+		}
+		if ($this->dcat)
+			$disc .= " ($this->dcat)";
+		if ($this->ddist > -1)
+			$disc .= " $this->ddist $this->ddunit";
+		if ($this->dteam)
+			$disc .= " - $this->dteam";
+		$disc .= "<br>";
+
+		return array($this->did, $disc); 
+	}
+
+	public function leven($string)
+	{
+		return levenshtein($this->dcat, $string). "<br>";
+	}
 }
 
 ?>
