@@ -87,6 +87,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 			unset($stt);
 			if ($create)
 			{
+				echo "$sid <br>";
 				$discarray = array_merge($disc, array('sid' => $sid));
 				echo "<pre>";
 				var_dump($discarray);
