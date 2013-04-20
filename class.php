@@ -244,8 +244,8 @@ class Country
 	{
 		global $conn;
 		$country = utf8_encode($country);
-		$medIOC = $conn->prepare("SELECT iocCode FROM Country WHERE cname = ?");
-		$medIOC->execute(array($country));
+		$medIOC = $conn->prepare("SELECT iocCode FROM Country WHERE cname = ? OR LIKE ?");
+		$medIOC->execute(array($country, $country));
 		$medIOC = $medIOC->fetchAll(PDO::FETCH_CLASS, "Country");
 		if (empty($medIOC))
 			return false;
@@ -267,8 +267,8 @@ class Sport
 	public static function findSport($sname)
 	{
 		global $conn;
-		$spo = $conn->prepare("SELECT * FROM Sport WHERE sname = ?");
-		$spo->execute(array($sname));
+		$spo = $conn->prepare("SELECT * FROM Sport WHERE sname = ? OR LIKE ?");
+		$spo->execute(array($sname, $sname));
 		$spo = $spo->fetchAll(PDO::FETCH_CLASS, "Sport");
 		if (empty($spo))
 			return false;
