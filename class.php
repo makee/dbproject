@@ -1,6 +1,7 @@
 <?
 include_once('connect.php');
 
+
 class Athlete
 {
 	public $aid;
@@ -48,13 +49,29 @@ class Athlete
 		$athl = utf8_encode($name);
 		//$athl = htmlentities($athl);
 		$athl = "%".$athl."%";
-		$query = "SELECT aid FROM athlete WHERE aname LIKE ?";
+		$query = "SELECT aid, aname FROM athlete WHERE aname LIKE ?";
 		$stt = $conn->prepare($query);
 		$stt->execute((array)$athl);
-		$res = $stt->fetchColumn();
-		return $res;
-
+		$res = $stt->fetchAll(PDF::FETCH_CLASS, Athlete);
+		if (empty($res))
+			return false;
+		else
+			return $res[0];
 	}
+
+	public static function insert($aname)
+	{
+		global $conn;
+		$aid = IDgen($saame, "Athlete", "aid"); 
+		$aname = utf8_encode($aname);
+		$stt = $conn->prepare("INSERT INTO Sport (sid, sname) VALUES ('$aid', ?)");
+		$stt->execute((array)$aname);
+		$athlete = new Athlete();
+		$athlete->aid = $aid;
+		$athlete->aname = $aname;
+		return $athlete;
+	}
+
 }
 
 
@@ -122,9 +139,147 @@ class Discipline
 		return array($this->did, $disc); 
 	}
 
-	public function leven($string)
+	private function leven($string)
 	{
 		return levenshtein($this->dcat, $string). "<br>";
+	}
+
+
+	public function compare(array $exp)
+	{
+		foreach ($exp as $key => $val)
+		{
+			$$key = $val;
+		}
+		if (
+				($ddunit != $this->ddunit && $ddunit != "") // diff unit and imported not empty
+				|| ($dwunit != $this->ddunit && $ddunit != "")// diff unit
+				|| ($dminweight != $this->dminweight && $dminweight != -1) // diff min weight but imported defined
+				|| ($dmaxweight != $this->dmaxweight && $dmaxweight != -1)// diff min weight but imported defined
+				|| ($ddist != $this->ddist && $ddist != -1)// diff dist but imported defined
+				|| ($dteam != $this->dteam && $dteam != "")// diff team but imported defined
+				|| ($this->leven($dcat) > 3)
+			)
+			$similar = false;
+		else
+			$similar = true;
+		return $similar;
+	}
+
+	public static function insert(array $newdisc)
+	{
+		global $conn;
+		foreach ($newdisc as $key => $val)
+		{
+			$$key = $val;
+		}
+		$DID = IDgen($drest, "Discipline", "did", true); 
+		$query = "INSERT INTO Discipline (did, dname, dgender, dminweight, dmaxweight, dwunit, ddist, ddunit, dteam, dcat, sid) VALUES ('$DID', '$drest', $dgender, $dminweight, $dmaxweight, '$dwunit', '$ddist', '$ddunit', '$dteam', '$dcat', '$sid')";
+		$stt = $conn->query($query);
+
+		$disc = new Discipline();
+		$disc->did = $DID;
+		$disc->drest = $drest;
+		$disc->dgender = $dgender;
+		$disc->dminweight = $dminweight;
+		$disc->dmaxweight = $dmaxweight;
+		$disc->dwunit = $dwunit;
+		$disc->ddist = $ddist;
+		$disc->ddunit = $ddunit;
+		$disc->dteam = $dteam;
+		$disc->dcat = $dcat;
+		$disc->sid = $sid;
+		return $disc;
+		
+	}
+
+}
+
+
+class Game{
+	public $gid;
+	public $year;
+	public $season;
+	public $city;
+	public $iocCode;
+
+	public function __construct()
+	{
+		foreach(get_object_vars($this) as $key => $attr)
+			$this->$key = preg_replace('/ +$/', '', $attr);
+	}
+
+	public static function findGame($year, $season)
+	{	
+		global $conn;
+		$medGID = $conn->query("SELECT gid, city, iocCode, year, season FROM Game WHERE year = '$year' AND season = '$season'");
+		$medGID = $medGID->fetchAll(PDO::FETCH_CLASS, "Game");
+		return $medGID[0];
+	}
+
+	public function writeFullGame()
+	{
+		$season = $this->season=="s"?"Summer":"Winter";
+		return "$this->year $season Olympics at $this->city ($this->gid)";
+	}
+
+}	
+
+class Country
+{
+	public $iocCode;
+	public $cname;
+
+	public function __construct()
+	{
+		foreach(get_object_vars($this) as $key => $attr)
+			$this->$key = preg_replace('/ +$/', '', $attr);
+	}
+
+	public static function findCountry($country)
+	{
+		global $conn;
+		$medIOC = $conn->prepare("SELECT iocCode FROM Country WHERE cname LIKE ?");
+		$medIOC->execute(array($country));
+		$medIOC = $medIOC->fetchAll(PDO::FETCH_CLASS, "Country");
+		if (empty($medIOC))
+			return false;
+		else
+			return $medIOC[0];	
+	}
+}
+
+class Sport
+{
+	public $sname;
+	public $sid;
+
+	public function __construct()
+	{
+		foreach(get_object_vars($this) as $key => $attr)
+			$this->$key = preg_replace('/ +$/', '', $attr);
+	}
+	public static function findSport($sname)
+	{
+		global $conn;
+		$spo = $conn->prepare("SELECT * FROM Sport WHERE sname LIKE ?");
+		$spo->execute(array($sname));
+		$spo = $spo->fetchAll(PDO::FETCH_CLASS, "Sport");
+		if (empty($spo))
+			return false;
+		else
+			return $spo[0];	
+	}
+
+	public static function insert($sname)
+	{
+		global $conn;
+		$SID = IDgen($sname, "Sport", "sid"); 
+		$conn->query("INSERT INTO Sport (sid, sname) VALUES ('$SID', '$sname')");
+		$sport = new Sport();
+		$sport->sid = $SID;
+		$sport->sname = $sname;
+		return $sport;
 	}
 }
 

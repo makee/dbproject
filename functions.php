@@ -166,7 +166,6 @@ function explodeDiscipline($disc, $spo){
 
 	// Team ?
 	$tt = preg_match('/(Team|Individual|Single|Double|Solo|relay)s?/i', $rest, $team);
-	echo "<br>$tt<br>";
 	if($tt > 0)
 	{
 		$team = $team[1];
