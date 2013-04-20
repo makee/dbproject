@@ -90,7 +90,6 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 				echo "Creation of: ". $newdisc->display()[1]. "(".$newdisc->display()[0].")"."<br>";
 				$did = $newdisc->did;
 			}
-			$athstr = "";
 			if($_GET['athl'] == 'oui'){
 			for ($zz=5; $zz<count($medal)-1; $zz++)
 			{
@@ -103,21 +102,22 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 					$aid = $newathl->aid;
 				}
 				else
+					$aid = $athlete->aid;
+				if ($_GET['part'] == 'oui')
 				{
+				$participation = Participation::insert($aid, $did, $gid, $med);
+				echo $participation?"Participation insertion successfully completed<br>":"Participation insertion failed<br>";
+				}
+				/*{
 					if (!$conn->query("SELECT aid FROM Participation where aid = '$medAID' AND did = '$medDID' AND gid = '$medGID'")->fetchColumn())
 					{
 					//	$statmnt = $conn->prepare("INSERT INTO Participation (aid, did, gid, medal) VALUES (?, ?, ?, ?)");
 					//	$statmnt->execute(array($medAID, $medDID, $medGID, $med));
 					}
-				}
-				if ($zz != 5)
-					$athstr .= "<br>";
-				$athstr .= $medAID;
+				}*/
 			}
 			}
-			//echo "<tr><td>$medGID</td><td>$medIOC</td><td>$medSID</td><td>$medDID</td><td>$med</td><td>$athstr</td></tr>";
 
-//			echo "<tr><td>$medGID</td><td>$medIOC</td><td>$spo</td><td>$disc</td><td>$med</td><td></td></tr>";
 			echo "<br>";
 		}
 		$ct++;
