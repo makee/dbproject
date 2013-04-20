@@ -56,6 +56,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 
 	echo "$nb $max";
 	for($i=$nb-100;$i<=$max;$i++)
 	{
+	echo 1;
 		$athletee = $athlete[$i];
 		echo "<pre>";
 		var_dump($athletee);
