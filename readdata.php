@@ -54,17 +54,20 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 
 	$max = count($athlete);
 	$nb = $conn->query("SELECT COUNT(*) FROM athlete")->fetchColumn();
 	echo "$nb $max";
-	for($i=$nb-100;$i>=$max;$i++)
+	for($i=$nb-100;$i<=$max;$i++)
 	{
 		$athletee = $athlete[$i];
+		echo "<pre>";
+		var_dump($athletee);
+		echo "</pre>";
 		$athl = $athletee[0];
 		if ($athl != NULL && $athl != 'name' && $athl != "")
 		{
 			$test = Athlete::insert($athl);
 			if($test)
-				echo "$ct Athlete created: ".$test->aid."/".$test->aname."<br>";
+				echo "Athlete created: ".$test->aid."/".$test->aname."<br>";
 			else
-				echo "$ct Falied to create $athl<br>";
+				echo "Failed to create $athl<br>";
 		}
 	}
 }
