@@ -51,11 +51,12 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Game")->fetchColumn() == 0 |
 
 if ($reimport || $conn->query("SELECT COUNT(*) FROM Athlete")->fetchColumn() == 0 || isset($_GET['athlete']))
 {
-unset($athlete[0]);
-$ct = 0;
-	foreach ($athlete as $athletee)
+	$max = count($athlete);
+	$nb = $conn->query("SELECT COUNT(*) FROM athlete")->fetchColumn();
+	echo "$nb $max";
+	for($i=$nb-100;$i>=$max;$i++)
 	{
-		$nb = $conn->query("SELECT COUNT(*) FROM athlete")->fetchColumn();
+		$athletee = $athlete[$i];
 		if($ct > $nb-100)
 		{
 				$athl = $athletee[0];
