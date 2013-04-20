@@ -52,7 +52,7 @@ class Athlete
 		$query = "SELECT aid, aname FROM athlete WHERE aname LIKE ?";
 		$stt = $conn->prepare($query);
 		$stt->execute((array)$athl);
-		$res = $stt->fetchAll(PDF::FETCH_CLASS, Athlete);
+		$res = $stt->fetchAll(PDO::FETCH_CLASS, 'Athlete');
 		if (empty($res))
 			return false;
 		else
@@ -62,7 +62,7 @@ class Athlete
 	public static function insert($aname)
 	{
 		global $conn;
-		$aid = IDgen($saame, "Athlete", "aid"); 
+		$aid = IDgen($aname, "Athlete", "aid"); 
 		$aname = utf8_encode($aname);
 		$stt = $conn->prepare("INSERT INTO Sport (sid, sname) VALUES ('$aid', ?)");
 		$stt->execute((array)$aname);
@@ -173,6 +173,7 @@ class Discipline
 		{
 			$$key = $val;
 		}
+		echo $sid;
 		$DID = IDgen($drest, "Discipline", "did", true); 
 		$query = "INSERT INTO Discipline (did, dname, dgender, dminweight, dmaxweight, dwunit, ddist, ddunit, dteam, dcat, sid) VALUES ('$DID', '$drest', $dgender, $dminweight, $dmaxweight, '$dwunit', '$ddist', '$ddunit', '$dteam', '$dcat', '$sid')";
 		$stt = $conn->query($query);

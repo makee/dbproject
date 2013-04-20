@@ -63,7 +63,6 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 				$spo = $spo->sname;
 				$sid = $spo->sid;
 			}
-			echo " $sid";
 			$query = "SELECT d.*, s.sid FROM Discipline d, Sport s WHERE s.sid = d.sid AND s.sname LIKE '$spo'";
 			$query .= " AND dname LIKE ?";
 			$query .= " AND dgender LIKE '$dgender'";
