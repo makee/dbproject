@@ -77,7 +77,8 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 					if($discipline->compare($disc))
 					{
 						$create = false;
-						echo  "Founded: ".$discipline->display()[1];
+						$write = $discipline->display();
+						echo  "Founded: ".$write[1];
 						$did = $discipline->did;
 						break;
 					}
