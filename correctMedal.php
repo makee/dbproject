@@ -87,7 +87,11 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 			unset($stt);
 			if ($create)
 			{
-				$newdisc = Discipline::insert(array_merge($disc, array('sid' => $sid)));		
+				$discarray = array_merge($disc, array('sid' => $sid));
+				echo "<pre>";
+				var_dump($discarray);
+				echo "</pre>";
+				$newdisc = Discipline::insert($discarray);		
 				$write = $newdisc->display();
 				echo "Creation of: ". $write[1]. "(".$write[0].")"."<br>";
 				$did = $newdisc->did;
