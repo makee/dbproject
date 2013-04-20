@@ -267,7 +267,7 @@ class Sport
 	public static function findSport($sname)
 	{
 		global $conn;
-		$spo = $conn->prepare("SELECT * FROM Sport WHERE sname LIKE ?");
+		$spo = $conn->prepare("SELECT * FROM Sport WHERE sname = ?");
 		$spo->execute(array($sname));
 		$spo = $spo->fetchAll(PDO::FETCH_CLASS, "Sport");
 		if (empty($spo))
