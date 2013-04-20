@@ -44,6 +44,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 	
 			$medGID = Game::findGame($ye[0], $seas);
 			echo $medGID->writeFullGame()."<br>";
+			$gid = $medGID->gid;
 			$medIOC = Country::findCountry($coun);
 			if ($medIOC)
 				echo $medIOC->iocCode."<br>";
@@ -59,7 +60,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 			{
 				echo "Sport not found: $spo<br>";
 				$spo = Sport::insert($spo);
-				echo "Sport created: $spo->sname: $spo->sid";
+				echo "Sport created: $spo->sname: $spo->sid <br>";
 				$sid = $spo->sid;
 				$spo = $spo->sname;
 			}

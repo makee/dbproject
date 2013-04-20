@@ -283,4 +283,48 @@ class Sport
 	}
 }
 
+class Participation
+{
+	public $did;
+	public $gid;
+	public $aid;
+	public $medal;
+
+	public function __construct()
+	{
+		foreach(get_object_vars($this) as $key => $attr)
+			$this->$key = preg_replace('/ +$/', '', $attr);
+	}
+	public static function findPart($aid, $did, $gid, $medal)
+	{
+		global $conn;
+		$part = $conn->query("SELECT * FROM Participation WHERE aid = '$aid' AND gid = '$gid' AND did = '$did' AND medal = $medal");
+		$part = $part->fetchAll(PDO::FETCH_CLASS, "Participation");
+		if (empty($part))
+			return false;
+		else
+			return $part[0];	
+	}
+
+	public static function insert($aid, $did, $gid, $medal)
+	{
+		global $conn;
+		$test = Participation::findPart($aid, $did, $gid, $medal);
+		if (!$test)
+		{
+			$conn->query("INSERT INTO Participation (aid, did, gid, medal) VALUES ('$aid', '$did', '$gid', '$medal')");
+			$part= new Participation();
+			$part->aid = $aid;
+			$part->did = $did;
+			$part->gid = $gid;
+			$part->medal = $medal;
+			return $part;
+		}
+		else
+			return $test;
+	}
+}
+
+
+
 ?>
