@@ -60,8 +60,8 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 				echo "Sport not found: $spo<br>";
 				$spo = Sport::insert($spo);
 				echo "Sport created: $spo->sname: $spo->sid";
-				$spo = $spo->sname;
 				$sid = $spo->sid;
+				$spo = $spo->sname;
 			}
 			$query = "SELECT d.*, s.sid FROM Discipline d, Sport s WHERE s.sid = d.sid AND s.sname LIKE '$spo'";
 			$query .= " AND dname LIKE ?";
@@ -87,11 +87,6 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 			unset($stt);
 			if ($create)
 			{
-				echo "$sid <br>";
-				$discarray = array_merge($disc, array('sid' => $sid));
-				echo "<pre>";
-				var_dump($discarray);
-				echo "</pre>";
 				$newdisc = Discipline::insert($discarray);		
 				$write = $newdisc->display();
 				echo "Creation of: ". $write[1]. "(".$write[0].")"."<br>";
