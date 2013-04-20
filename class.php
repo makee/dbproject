@@ -243,6 +243,7 @@ class Country
 	public static function findCountry($country)
 	{
 		global $conn;
+		$country = utf8_encode($country);
 		$medIOC = $conn->prepare("SELECT iocCode FROM Country WHERE cname LIKE ?");
 		$medIOC->execute(array($country));
 		$medIOC = $medIOC->fetchAll(PDO::FETCH_CLASS, "Country");
@@ -278,11 +279,15 @@ class Sport
 	public static function insert($sname)
 	{
 		global $conn;
-		$SID = IDgen($sname, "Sport", "sid"); 
-		$conn->query("INSERT INTO Sport (sid, sname) VALUES ('$SID', '$sname')");
-		$sport = new Sport();
-		$sport->sid = $SID;
-		$sport->sname = $sname;
+		$sport = Sport::findSport($sname);
+		if (!$sport)
+		{
+			$SID = IDgen($sname, "Sport", "sid"); 
+			$conn->query("INSERT INTO Sport (sid, sname) VALUES ('$SID', '$sname')");
+			$sport = new Sport();
+			$sport->sid = $SID;
+			$sport->sname = $sname;
+		}
 		return $sport;
 	}
 }
