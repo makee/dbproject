@@ -55,7 +55,8 @@ unset($athlete[0]);
 $ct = 0;
 	foreach ($athlete as $athletee)
 	{
-		if($ct < $_GET['max'] && $ct > $_GET['min'])
+		$nb = $conn->query("SELECT COUNT(*) FROM athlete")->fetchColumn();
+		if($ct > $nb-100)
 		{
 				$athl = $athletee[0];
 				if ($athl != NULL && $athl != 'name' && $athl != "")
