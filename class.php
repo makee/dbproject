@@ -244,7 +244,7 @@ class Country
 	{
 		global $conn;
 		$country = utf8_encode($country);
-		$medIOC = $conn->prepare("SELECT iocCode FROM Country WHERE cname LIKE ?");
+		$medIOC = $conn->prepare("SELECT iocCode FROM Country WHERE cname = ?");
 		$medIOC->execute(array($country));
 		$medIOC = $medIOC->fetchAll(PDO::FETCH_CLASS, "Country");
 		if (empty($medIOC))
