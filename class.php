@@ -50,9 +50,9 @@ class Athlete
 		$athl = utf8_encode($athl);
 	//	$athl = htmlentities($athl);
 		$athl = "%".$athl."%";
-		$query = "SELECT aid, aname FROM athlete WHERE aname LIKE N'$athl'";
-		$stt = $conn->query($query);
-		//$stt->execute((array)$athl);
+		$query = "SELECT aid, aname FROM athlete WHERE aname LIKE ?";
+		$stt = $conn->prepare($query);
+		$stt->execute((array)$athl);
 		$res = $stt->fetchAll(PDO::FETCH_CLASS, 'Athlete');
 		if (empty($res))
 			return false;
