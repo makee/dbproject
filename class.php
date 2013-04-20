@@ -46,12 +46,13 @@ class Athlete
 	public static function findAthlete($name)
 	{
 		global $conn;
-		$athl = utf8_encode($name);
+		$athl = $name;
+		$athl = utf8_encode($athl);
 		//$athl = htmlentities($athl);
 		$athl = "%".$athl."%";
-		$query = "SELECT aid, aname FROM athlete WHERE aname LIKE ?";
-		$stt = $conn->prepare($query);
-		$stt->execute((array)$athl);
+		$query = "SELECT aid, aname FROM athlete WHERE aname LIKE N'$athl'";
+		$stt = $conn->query($query);
+		//$stt->execute((array)$athl);
 		$res = $stt->fetchAll(PDO::FETCH_CLASS, 'Athlete');
 		if (empty($res))
 			return false;
@@ -62,14 +63,17 @@ class Athlete
 	public static function insert($aname)
 	{
 		global $conn;
-		$aid = IDgen($aname, "Athlete", "aid"); 
+		$aid = IDgen($aname, "Athlete", "aid", true); 
 		$aname = utf8_encode($aname);
-		$stt = $conn->prepare("INSERT INTO Sport (sid, sname) VALUES ('$aid', ?)");
-		$stt->execute((array)$aname);
-		$athlete = new Athlete();
-		$athlete->aid = $aid;
-		$athlete->aname = $aname;
-		return $athlete;
+		$test = Athlete::findAthlete($aname);
+		if (!$test)
+		{
+			$stt = $conn->query("INSERT INTO Sport (sid, sname) VALUES ('$aid', N'$aname')");
+			$athlete = Athlete::findAthlete($aname);
+			return $athlete;
+		}
+		else
+			return $test;
 	}
 
 }
