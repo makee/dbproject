@@ -69,7 +69,7 @@ class Athlete
 		$test = Athlete::findAthlete($aname);
 		if (!$test)
 		{
-			$stt = $conn->query("INSERT INTO Athlete (sid, sname) VALUES ('$aid', N'$aname')");
+			$stt = $conn->query("INSERT INTO Athlete (aid, aname) VALUES ('$aid', N'$aname')");
 			$athlete = Athlete::findAthlete($aname);
 			return $athlete;
 		}
