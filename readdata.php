@@ -51,10 +51,15 @@ if (isset($_GET['game']))
 
 if (isset($_GET['athlete']))
 {
-	$max = count($athlete);
-	$nb = $conn->query("SELECT COUNT(*) FROM athlete")->fetchColumn();
-	echo "$nb $max";
-	for($i=$nb-100;$i<=$max;$i++)
+	if (isset($_get['max']))
+		$max = $_GET['max'];
+	else
+		$max = count($athlete);
+	if(isset($_GET['min']))
+		$nb = $_GET['min'];
+	else
+		$nb = $conn->query("SELECT COUNT(*) FROM athlete")->fetchColumn() -100;
+	for($i=$nb;$i<=$max;$i++)
 	{
 		$athletee = $athlete[$i];
 		$athl = $athletee[0];

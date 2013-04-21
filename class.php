@@ -47,7 +47,7 @@ class Athlete
 	{
 		global $conn;
 		$athl = $name;
-		$athl = utf8_encode($athl);
+//		$athl = utf8_encode($athl);
 	//	$athl = htmlentities($athl);
 		$athl = "%".$athl."%";
 		$query = "SELECT aid, aname FROM athlete WHERE aname LIKE ?";
@@ -69,7 +69,7 @@ class Athlete
 		$test = Athlete::findAthlete($aname);
 		if (!$test)
 		{
-			$stt = $conn->query("INSERT INTO Athlete (aid, aname) VALUES ('$aid', N'$aname')");
+			$stt = $conn->prepare("INSERT INTO Athlete (aid, aname) VALUES ('$aid', N'$aname')");
 			$athlete = Athlete::findAthlete($aname);
 			return $athlete;
 		}
