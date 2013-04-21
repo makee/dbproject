@@ -1,6 +1,7 @@
 <?
 include_once('connect.php');
 include_once('functions.php');
+include_once('class.php');
 
 $reimport = true;
 $debug = !true;
@@ -11,51 +12,60 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Discipline")->fetchColumn() 
 		echo "<table><tr><th>Discipline</th><th>Gender</th><th>Min Weight</th><th>Max Weight</th><th>Wunit</th><th>Distance</th><th>Dunit</th><th>Team ? </th><th>Category</th><th>Rest</th><th>Sport</th>";
 	foreach ($disciplines as $discipline)
 	{
-	//if ($ct > 183 && $ct < 190){
-		$sportmatch = $conn->query("SELECT sid FROM Sport WHERE sname LIKE '%$discipline[1]%'")->fetchColumn(); 
-		/*if ($sportmatch != NULL )
+		$spo = $discipline[1];
+		$disc = explodeDiscipline($discipline[0], $spo);
+		foreach($disc as $key => $val)
+			$$key = $val;
+
+		$medSID = Sport::findSport($spo);
+		if($medSID)
 		{
-			$DID = IDgen($discipline[0], "discipline", "did", true);
-		//	$conn->prepare("INSERT INTO Discipline (did, dname, sid) VALUES ('$DID', ?, '$sportmatch')")->execute(array($discipline[0]));
-		}*/
-		$exp = explodeDiscipline($discipline[0], $discipline[1]);
-		if ($debug)
-		{
-	echo $ct;
-			echo "<tr>";
-			echo "<td>".$discipline[0]."</td>";
-			echo "<td>".$exp['dgender']."</td>";
-			echo "<td>".$exp['dminweight']."</td>";
-			echo "<td>".$exp['dmaxweight']."</td>";
-			echo "<td>".$exp['dwunit']."</td>";
-			echo "<td>".$exp['ddist']."</td>";
-			echo "<td>".$exp['ddunit']."</td>";
-			echo "<td>".$exp['dteam']."</td>";
-			echo "<td>".$exp['dcat']."</td>";
-			echo "<td>".$exp['drest']."</td>";
-			echo "<td>";
-			echo $sportmatch?$sportmatch:$discipline[1];
-			echo "</td>";
-			echo "</tr>";
+			$sid = $medSID->sid;
+			echo "Sport found: ".$sid. " ".$medSID->sname. "<br>";	
 		}
-		else
+		else 
 		{
-			$DID = IDgen($exp['drest'], "discipline", "did", true);
-			foreach ($exp as $key => $val)
+			echo "Sport not found: $spo<br>";
+			$spo = Sport::insert($spo);
+			echo "Sport created: $spo->sname: $spo->sid <br>";
+			$sid = $spo->sid;
+			$spo = $spo->sname;
+		}
+		$query = "SELECT d.*, s.sid FROM Discipline d, Sport s WHERE s.sid = d.sid AND s.sname LIKE '$spo'";
+		$query .= " AND dname LIKE ?";
+		$query .= " AND dgender LIKE '$dgender'";
+		$stt = $conn->prepare($query);
+		$stt->execute((array)$drest);
+		$stt = $stt->fetchAll(PDO::FETCH_CLASS, "discipline");	
+		$create = true;
+		if (!empty($stt))
+		{
+			foreach ($stt as $disci)
 			{
-				$$key = $val;
+				if($disci->compare($disc))
+				{
+					$create = false;
+					$write = $disci->display();
+					echo  "Founded: ".$write[1];
+					$did = $disci->did;
+					break;
+				}
 			}
-			$exec = array_merge((array)$DID, $exp, (array)$sportmatch);
-			echo "<pre>";
-			//var_dump($exec);
-			echo "</pre>";
-			$query =  "INSERT INTO Discipline (did, dgender, dminweight, dmaxweight, dwunit, ddist, ddunit, dteam, dcat, dname, sid) VALUES ('$DID', '$dgender', '$dminweight', '$dmaxweight', '$dwunit', '$ddist', '$ddunit', '$dteam', '$dcat', ?, '$sportmatch')";
-			$conn->prepare($query)->execute(array(utf8_encode($drest)));
-			//$conn->query($query);
-			//echo $conn->prepare("INSERT INTO Discipline (did, dgender, dminweight, dmaxweight, dwunit, ddist, ddunit, dteam, dcat, dname, sid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")->execute($exec)?'oui':'non';
+		}
+		unset($stt);
+		if ($create)
+		{
+			$discarray = array_merge($disc, array('sid' => $sid));
+			$test = Discipline::insert($discarray);		
+			if($test)
+			{
+				$write = $test->display();
+				echo "Discipline created: ".$write[1]."/".$test->sid ."<br>" ;
+			}	
+			else
+				echo "Failed to create $discipline[0]<br>";
 		}
 		$ct ++;
-//		if($ct > 10) break;
 	}
 	if ($debug)
 		echo "</table>";

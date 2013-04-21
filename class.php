@@ -69,13 +69,15 @@ class Athlete
 		$test = Athlete::findAthlete($aname);
 		if (!$test)
 		{
-			echo "INSERT INTO Sport (sid, sname) VALUES ('$aid', N'$aname')";
-			$stt = $conn->query("INSERT INTO Sport (sid, sname) VALUES ('$aid', N'$aname')");
+			$stt = $conn->query("INSERT INTO Athlete (sid, sname) VALUES ('$aid', N'$aname')");
 			$athlete = Athlete::findAthlete($aname);
 			return $athlete;
 		}
 		else
+		{
+			echo "Already ";
 			return $test;
+		}
 	}
 
 }
@@ -140,7 +142,7 @@ class Discipline
 			$disc .= " $this->ddist $this->ddunit";
 		if ($this->dteam)
 			$disc .= " - $this->dteam";
-		$disc .= "<br>";
+		//$disc .= "<br>";
 
 		return array($this->did, $disc); 
 	}
@@ -180,9 +182,9 @@ class Discipline
 			$$key = $val;
 		}
 		$DID = IDgen($drest, "Discipline", "did", true); 
-		$query = "INSERT INTO Discipline (did, dname, dgender, dminweight, dmaxweight, dwunit, ddist, ddunit, dteam, dcat, sid) VALUES ('$DID', '$drest', $dgender, $dminweight, $dmaxweight, '$dwunit', '$ddist', '$ddunit', '$dteam', '$dcat', '$sid')";
-		$stt = $conn->query($query);
-
+		$query = "INSERT INTO Discipline (did, dname, dgender, dminweight, dmaxweight, dwunit, ddist, ddunit, dteam, dcat, sid) VALUES ('$DID', ?, $dgender, $dminweight, $dmaxweight, '$dwunit', '$ddist', '$ddunit', '$dteam', '$dcat', '$sid')";
+		$stt = $conn->prepare($query);
+		$stt->execute((array)$drest);
 		$disc = new Discipline();
 		$disc->did = $DID;
 		$disc->drest = $drest;
@@ -238,13 +240,17 @@ class Game{
 		global $conn;
 		$test = Game::findGame($year, $season);
 		if ($test)
+		{
+			echo "Already ";
 			return $test;
+		}
 		else
 		{
 			$city = utf8_encode($city);
 			$GID = $year . strtoupper($season) . $iocCode;
-			$query = "INSERT INTO Game (gid, year, season, city, iocCode) VALUES ('$GID', '$year', '$season', '$city', '$iocCode')";
-			$tt = $conn->query($query);
+			$query = "INSERT INTO Game (gid, year, season, city, iocCode) VALUES ('$GID', '$year', '$season', ?, '$iocCode')";
+			$tt = $conn->prepare($query);
+			$tt->execute((array)($city));
 			$game = Game::findGame($year, $season);
 			return $game;
 		} 
@@ -282,11 +288,16 @@ class Country
 		global $conn;
 		$test = Country::findCountry($cname);
 		if ($test)
+		{
+			echo "Already ";
 			return $test;
+		}
 		else
 		{
 			$cname = utf8_encode($cname);
-			$country = $conn->query("INSERT INTO Country (iocCode, cname) VALUES ('$iocCode', '$cname')");
+			$query = "INSERT INTO Country (iocCode, cname) VALUES ('$iocCode', ?)";
+			$country = $conn->prepare($query);
+			$country->execute((array)$cname);
 			$country = Country::findCountry($cname);
 			return $country;
 		} 
@@ -306,7 +317,7 @@ class Sport
 	public static function findSport($sname)
 	{
 		global $conn;
-		$sname = "%$sname%";
+		$sname = "$sname%";
 		$spo = $conn->prepare("SELECT * FROM Sport WHERE sname LIKE ?");
 		$spo->execute(array($sname));
 		$spo = $spo->fetchAll(PDO::FETCH_CLASS, "Sport");
@@ -327,6 +338,10 @@ class Sport
 			$sport = new Sport();
 			$sport->sid = $SID;
 			$sport->sname = $sname;
+		}
+		else
+		{
+			echo "Already ";
 		}
 		return $sport;
 	}
@@ -370,7 +385,10 @@ class Participation
 			return $part;
 		}
 		else
+		{
+			echo "Already ";
 			return $test;
+		}
 	}
 }
 
