@@ -80,7 +80,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 					{
 						$create = false;
 						$write = $discipline->display();
-						echo  "Founded: ".$write[1];
+						echo  "Founded: ".$write[1]."<br>";
 						$did = $discipline->did;
 						break;
 					}
@@ -114,16 +114,16 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 				else
 				{
 					$aid = $athlete->aid;
-					echo "Founded $medal[$zz]<br>";
+					echo "Founded $athlete->aname / $athlete->aid <br>";
 				}
 				if ($_GET['part'] == 'oui')
 				{
 				$participation = Participation::insert($aid, $did, $gid, $med);
-				echo $participation?"Participation insertion successfully completed<br>":"Participation insertion failed<br>";
+				echo $participation?"Participation insertion successfully completed $participation->aid $participation->gid $participation->did<br>":"Participation insertion failed<br>";
 				}
 				$tt = Represents::insert($iocCode, $aid, $gid);
 				echo "Representation insertion: ";
-				echo $tt?"Success<br>":"Failed";
+				echo $tt?"Success $tt->aid - $tt->gid - $tt->iocCode<br>":"Failed";
 			}
 			}
 

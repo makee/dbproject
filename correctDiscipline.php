@@ -46,7 +46,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Discipline")->fetchColumn() 
 				{
 					$create = false;
 					$write = $disci->display();
-					echo  "Founded: ".$write[1];
+					echo  "Founded: ".$write[1]."<br>";
 					$did = $disci->did;
 					break;
 				}

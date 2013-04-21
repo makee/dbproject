@@ -1,5 +1,6 @@
 <?
 include_once('connect.php');
+include_once('array.php');
 mb_internal_encoding("UCS-2");
 
 class Athlete
@@ -7,19 +8,10 @@ class Athlete
 	public $aid;
 	public $aname;
 
-	public function __construct($aid = false)
+	public function __construct()
 	{
-		global $conn;
-		if ($aid)
-		{
-			$query = "SELECT * FROM athlete WHERE aid = '$aid'";	
-			$res = $conn->prepare($query);
-			$res->execute();
-			$res = $res->fetch();
-			$this->aid = $res['aid'];
-			$this->aname = $res['aname'];
-			$this->aname = preg_replace('/ +$/', '', $this->aname);
-		}
+		foreach(get_object_vars($this) as $key => $attr)
+		$this->$key = preg_replace('/ +$/', '', $attr);
 	}
 	
 	public function listAttrib()
@@ -27,7 +19,7 @@ class Athlete
 		return (array('aid'=>$this->aid, 'aname'=>$this->aname));
 	}
 	
-	public static function getAthlete($limit)
+/*	public static function getAthlete($limit)
 	{
 		global $conn;
 		$query = "SELECT TOP $limit aid FROM athlete";
@@ -41,7 +33,7 @@ class Athlete
 	
 		}
 		return $listAthl;
-	}
+	}*/
 	
 	public static function findAthlete($name)
 	{
@@ -49,10 +41,12 @@ class Athlete
 		$athl = $name;
 //		$athl = utf8_encode($athl);
 	//	$athl = htmlentities($athl);
-		$athl = "%".$athl."%";
-		$query = "SELECT aid, aname FROM athlete WHERE aname LIKE ?";
+	//	$conn->quote($athl);
+		$athl = preg_replace('/(?<!\')\'(?!\')/', '\'\'', $athl);
+		$query = "SELECT aid, aname FROM athlete WHERE aname LIKE N'%$athl%'";// CONVERT(NCHAR(70), ?)";
 		$stt = $conn->prepare($query);
-		$stt->execute((array)$athl);
+//		$stt->execute((array)$athl);
+		$stt->execute();
 		$res = $stt->fetchAll(PDO::FETCH_CLASS, 'Athlete');
 		if (empty($res))
 			return false;
@@ -64,12 +58,14 @@ class Athlete
 	{
 		global $conn;
 		$aid = IDgen($aname, "Athlete", "aid", true); 
-		$aname = utf8_encode($aname);
+		//$aname = utf8_encode($aname);
 		//$aname = htmlentities($aname);
 		$test = Athlete::findAthlete($aname);
 		if (!$test)
 		{
-			$stt = $conn->prepare("INSERT INTO Athlete (aid, aname) VALUES ('$aid', N'$aname')");
+			$aname = preg_replace('/(?<!\')\'(?!\')/', '\'\'', $aname);
+			echo $aname;
+			$stt = $conn->query("INSERT INTO Athlete (aid, aname) VALUES ('$aid', N'$aname')");
 			$athlete = Athlete::findAthlete($aname);
 			return $athlete;
 		}
@@ -78,6 +74,44 @@ class Athlete
 			echo "Already ";
 			return $test;
 		}
+	}
+
+	public static function getAthleteDetail($aid)
+	{
+			//SELECT g.gid + ' ' + (CASE g.season WHEN 'w' THEN 'Winter' ELSE 'Summer' END) + ' Olympics ' + g.city AS Game
+		global $conn;
+		$athlete = $conn->prepare("
+			SELECT g.gid		 
+				, c.iocCode
+				, c.cname
+				, s.sid
+				, s.sname
+				, d.did
+				, p.medal
+			FROM game g
+				, country c
+				, sport s
+				, discipline d
+				, participation p
+				, represents r
+			WHERE g.gid=p.gid 
+				AND r.iocCode=c.iocCode 
+				AND r.aid=p.aid 
+				AND p.did=d.did 
+				AND s.sid=d.sid 
+				AND g.year <= ALL 
+					(SELECT g2.year 
+					FROM game g2
+						, represents r2 
+					WHERE r2.aid=r.aid 
+					AND r2.gid=g2.gid)
+					AND r.aid LIKE ?
+		");
+		$athlete->execute((array)$aid);
+		$athlete = $athlete->fetchAll();
+		foreach($athlete[0] as $key => $attr)
+			$athlete[0][$key] = preg_replace('/ +$/', '', $attr);
+		return $athlete;
 	}
 
 }
@@ -211,10 +245,11 @@ class Game{
 	public $city;
 	public $iocCode;
 
-	public function __construct()
+	public function __construct($id=false)
 	{
 		foreach(get_object_vars($this) as $key => $attr)
 			$this->$key = preg_replace('/ +$/', '', $attr);
+		
 	}
 
 	public static function findGame($year, $season)
@@ -272,7 +307,7 @@ class Country
 	public static function findCountry($country)
 	{
 		global $conn;
-		//$country = utf8_encode($country);
+		$country = utf8_encode($country);
 		$country = "%$country%";
 		$medIOC = $conn->prepare("SELECT iocCode, cname FROM Country WHERE cname LIKE ?");
 		$medIOC->execute(array($country));
@@ -401,12 +436,12 @@ class Represents
 	public static function findRepres($iocCode, $aid, $gid)
 	{
 		global $conn;
-		$rep = $conn->query("SELECT * FROM Represents WHERE iocCode = '$iocCode' AND aid = '$aid' AND gid = '$gid'");
-		$rep = $rep->fetchAll(PDO::FETCH_CLASS, "Represents");
-		if (empty($rep))
+		$event = $conn->query("SELECT * FROM Represents WHERE iocCode = '$iocCode' AND aid = '$aid' AND gid = '$gid'");
+		$event = $event->fetchAll(PDO::FETCH_CLASS, "Represents");
+		if (empty($event))
 			return false;
 		else
-			return $rep[0];	
+			return $event[0];	
 	}
 
 	public static function insert($iocCode, $aid, $gid)
@@ -421,6 +456,39 @@ class Represents
 		}
 		return $rep;
 	}
+
+}
+
+
+class Eventof
+{
+	public $did;
+	public $gid;
+
+	public static function findEvent($did, $gid)
+	{
+		global $conn;
+		$rep = $conn->query("SELECT * FROM Eventof WHERE did = '$did' AND gid = '$gid'");
+		$rep = $rep->fetchAll(PDO::FETCH_CLASS, "Eventof");
+		if (empty($rep))
+			return false;
+		else
+			return $rep[0];	
+	}
+
+	public static function insert($did, $gid)
+	{
+		global $conn;
+		$event = Eventof::findEvent($did, $gid);
+		if (!$event)
+		{
+			$conn->query("INSERT INTO Eventof (did, gid) VALUES ('$did', '$gid')");
+			$event = Eventof::findEvent($did, $gid);
+			return $event;
+		}
+		return $event;
+	}
+
 }
 
 

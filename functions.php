@@ -3,7 +3,6 @@ include_once('connect.php');
 include_once('class.php');
 
 
-
 function readCSV($csvFile)
 {
 	$file_handle = fopen($csvFile, 'r');
