@@ -64,7 +64,7 @@ class Athlete
 	{
 		global $conn;
 		$aid = IDgen($aname, "Athlete", "aid", true); 
-		//$aname = utf8_encode($aname);
+		$aname = utf8_encode($aname);
 		//$aname = htmlentities($aname);
 		$test = Athlete::findAthlete($aname);
 		if (!$test)
