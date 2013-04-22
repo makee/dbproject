@@ -188,7 +188,7 @@ if ($_GET['action'] == 'get_discipline' && isset($_GET['type']))
 	$root = $dom->createElement('result');
 	$dstring = $dname->display();
 	$dstring = $dstring[1];
-	$d = $dom->createElement('dname', );
+	$d = $dom->createElement('dname', $dstring);
 	$d->setAttribute('did', $did);
 	$root->appendChild($d);
 
