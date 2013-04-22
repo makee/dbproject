@@ -164,7 +164,7 @@ if ($_GET['action'] == 'get_sport' && isset($_GET['type']))
 		$dname = Discipline::getDiscipline($did);
 		$disc->setAttribute('did',$did);
 		$dstring = $dname->display();
-		$dsting = $dstring[1];
+		$dstring = $dstring[1];
 		$dn = $dom->createElement('dname', $dstring);
 		$gid = $disci['gid'];
 		$gname = $conn->query("SELECT * FROM Game WHERE gid LIKE '$gid'")->fetchAll(PDO::FETCH_CLASS, 'Game');
