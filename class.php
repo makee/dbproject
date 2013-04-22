@@ -64,7 +64,6 @@ class Athlete
 		if (!$test)
 		{
 			$aname = preg_replace('/(?<!\')\'(?!\')/', '\'\'', $aname);
-			echo $aname;
 			$stt = $conn->query("INSERT INTO Athlete (aid, aname) VALUES ('$aid', N'$aname')");
 			$athlete = Athlete::findAthlete($aname);
 			return $athlete;
@@ -88,13 +87,16 @@ class Athlete
 				, s.sname
 				, d.did
 				, p.medal
+				, a.aname
 			FROM game g
 				, country c
 				, sport s
 				, discipline d
 				, participation p
 				, represents r
+				, athlete a
 			WHERE g.gid=p.gid 
+				AND r.aid = a.aid
 				AND r.iocCode=c.iocCode 
 				AND r.aid=p.aid 
 				AND p.did=d.did 
@@ -133,23 +135,30 @@ class Discipline
 
 	public function __construct()
 	{
-		foreach(get_object_vars($this) as $key => $attr)
-			$this->$key = preg_replace('/ +$/', '', $attr);
+			foreach(get_object_vars($this) as $key => $attr)
+				$this->$key = preg_replace('/ +$/', '', $attr);
 	}
 
+
+	public static function getDiscipline($did)
+	{
+		global $conn;
+		$disc = $conn->query("SELECT * FROM Discipline WHERE did = '$did'");
+		$disc = $disc->fetchAll(PDO::FETCH_CLASS, 'Discipline');
+		return $disc[0];
+	}	
 	public function display()
 	{
 		switch($this->dgender)
 		{
-			case '0':
-			$this->gender = NULL;
-			break;
 			case '1':
-			$this->gender = "Men's";
+			$this->gender = "Men&apos;s";
 			break;
 			case '2':
-			$this->gender = "Women's";
+			$this->gender = "Women&apos;s";
 			break;			
+			default:
+			$this->gender = NULL;
 		}
 		$disc = "$this->gender $this->dname";
 		if ($this->dminweight == -1 && $this->dmaxweight > -1)
@@ -185,7 +194,6 @@ class Discipline
 	{
 		return levenshtein($this->dcat, $string). "<br>";
 	}
-
 
 	public function compare(array $exp)
 	{
@@ -235,6 +243,43 @@ class Discipline
 		
 	}
 
+	public static function getDisciplineDetail($did)
+	{
+		global $conn;
+		$disc = $conn->query("
+				SELECT g.gid
+					, a1.aid AS goldaid
+					, a1.aname AS goldaname
+					, a2.aid AS silveraid
+					, a2.aname AS silveraname
+					, a3.aid AS Bronzeaid
+					, a3.aname AS Bronzeaname
+				FROM game g
+					, athlete a1
+					, athlete a2
+					, athlete a3
+					, participation p1
+					, participation p2
+					, participation p3
+				WHERE p1.aid=a1.aid 
+					AND p1.medal=1 
+					AND p2.aid=a2.aid 
+					AND p3.medal=2 
+					AND p3.aid=a3.aid 
+					AND p3.medal=3 
+					AND p1.gid=g.gid 
+					AND p2.gid=g.gid 
+					AND p3.gid=g.gid
+					AND p1.did='$did' 
+					AND p2.did='$did' 
+					AND p3.did='$did'
+		")->fetchAll();
+		foreach($disc as $key => $attr){
+			$sport[$key] = preg_replace('/ +$/', '', $attr);	
+		}
+		return $disc;
+	}
+
 }
 
 
@@ -267,7 +312,7 @@ class Game{
 	public function writeFullGame()
 	{
 		$season = $this->season=="s"?"Summer":"Winter";
-		return "$this->year $season Olympics at $this->city ($this->gid)";
+		return "$this->year $season Olympics at $this->city";// ($this->gid)";
 	}
 
 	public static function insert($year, $season, $city, $iocCode)
@@ -289,6 +334,26 @@ class Game{
 			$game = Game::findGame($year, $season);
 			return $game;
 		} 
+	}
+
+	public function getGameDetail($gid)
+	{
+		global $conn;
+		$g = $conn->query("
+			SELECT *
+			FROM eventof e
+				, discipline d 
+				, sport s
+			WHERE e.did = d.did 
+				AND s.sid = d.sid
+				AND e.gid = '$gid'
+			")->fetchAll();
+		foreach($g as $key => $attr){
+			$g[$key] = preg_replace('/ +$/', '', $attr);	
+		}
+		return $g;
+		
+		
 	}
 
 }	
@@ -337,6 +402,47 @@ class Country
 			return $country;
 		} 
 	}
+
+	public function getCountryDetail($ioc, $limit)
+	{
+		global $conn;
+		//Hosto	
+		$games = array();
+		$games['host'] = $conn->query("
+			SELECT g.*
+				, c.cname
+			FROM game g
+				, country c
+			WHERE g.iocCode LIKE '$ioc'
+				AND g.iocCode = c.iocCode
+		")->fetchAll(PDO::FETCH_CLASS, 'Game');
+		$games['medal'] = $conn->query("
+				SELECT TOP $limit 
+					 g.gid 
+       				, a.aname 
+       				, a.aid 
+					, s.sname
+					, s.sid
+					, d.did
+					, p.medal 
+				FROM game g
+					, athlete a
+					, represents r
+					, participation p
+					, discipline d
+					, sport s 
+				WHERE g.gid=p.gid 
+					AND a.aid=p.aid 
+					AND r.aid=p.aid 
+					AND d.sid=s.sid 
+					AND p.did=d.did 
+					AND r.iocCode='$ioc'
+					AND p.medal <> 0
+		")->fetchAll();
+		foreach($games['medal'] as $key => $attr)
+			$games['medal'][$key] = preg_replace('/ +$/', '', $attr);
+		return $games;
+	}
 }
 
 class Sport
@@ -377,6 +483,29 @@ class Sport
 		else
 		{
 			echo "Already ";
+		}
+		return $sport;
+	}
+
+	public static function getSportDetail($sid)
+	{
+		global $conn;
+		$sport = $conn->query("
+			SELECT TOP 10
+				d.did
+				, g.* 
+				, s.sname
+			FROM discipline d
+				, game g
+				, participation p
+				, sport s
+			WHERE d.did=p.did 
+				AND d.sid = s.sid
+				AND p.gid=g.gid
+				AND d.sid = '$sid' 
+		")->fetchAll();
+		foreach($sport as $key => $attr){
+			$sport[$key] = preg_replace('/ +$/', '', $attr);	
 		}
 		return $sport;
 	}

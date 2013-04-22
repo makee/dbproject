@@ -35,7 +35,11 @@ function dispButtonAdd(){
 		str = str.replace(/id$/g, '');
 	});
 	$("img.button#valid").click(function(){
-		var input = $("input#str").serializeArray();
+		var input = $("input.addInfo").serializeArray();
+		keys = Object.keys(input);
+		for (var i in keys){
+		alert(input[i].name + ': ' + input[i].value);
+		}
 	});
 	
 	buttonCancel = $("<div class='wrapcancel'><img src='img/cancelData.png' id='cancel' class='button cancel'/></div>");
@@ -43,7 +47,7 @@ function dispButtonAdd(){
 	$("img.button#cancel").click(function(){
 		$("table.onglet.current tr.add").toggle();
 		$("img.button").remove();
-		dispButtonAdd();
+		tableResult(true);
 		});	
 	});
 }
@@ -99,31 +103,56 @@ function addDataRow()
 	}
 }
 
-function getResult()
-{
-	$("table.menu, table.onglet.current").show();
-	tableResult(true);
-	$.ajax({  
-	type: "GET",  
-	//url: "results.xml",  
-	url: "queries.php?action=top10&type=athlete",
-	data:{
-		action:'top10',
-		type:'athlete',
-		limit: 20
-	},
-	dataType: "xml",  
-	success: parseXml,
-	error: function(){alert('error');}
-	});
+	// parse url
 	
-}
+$(document).ready(function() {  
 
+	var url = window.location.href;
+	var qparts = url.split("?");
+	if (qparts.length == 0)
+	{
+		  return "";
+	}
+	var query = qparts[1];
+	
+	});
+	//alert(query);
+	
+	function getResult(searchstring)
+	{
+		$("table.menu, table.onglet.current").show();
+		tableResult(true);
+		$.ajax({  
+		type: "GET",  
+		url: "results.xml",  
+		//url: "http://dbproject13.azurewebsites.net/queries.php",
+		/*data:{
+			action:'globalquery',
+			string: searchstring,
+			query: query,
+		},*/
+		dataType: "xml",  
+		success: parseXml
+		});
+		//alert(searchstring);
+	}
 
 function loadOnClick()
 {
 	$("table.onglet tbody tr:not(.add)").click(function(){
-	TINY.box.show({iframe:'http://www.linkedin.com/pub/guillaume-jornod/52/b8a/215',width:400,height:400,close:false})
+	id = $(this).attr('id');
+	//alert(id)
+	if (id.match(/[a-z]id/)){
+		str = id.match(/([a-z]id-)(.{3,8})/);
+	}			
+	else if (id.match(/ioc/)){
+		str = id.match(/(ioccode-)(.{3,8})/);
+	}
+	
+	//alert(str[1] + ': ' + str[2]);
+	current = $("table.menu td.current").attr('targ');
+	//TINY.box.show({iframe:'details/'+ current +'.html',width:600,height:400,close:false,boxid:'frameless'})
+	TINY.box.show({iframe:'details/details.html?' + current + '#' + str[2],width:600,height:400,close:false,boxid:'frameless'})
 	});
 
 }
@@ -131,62 +160,67 @@ function loadOnClick()
 
 function parseXml(xml)
 {  
-	$(xml).find("athlete").each(function() {   
-		$("#athlete").append('<tr>' + '<td>' + $(this).find("aid").text() + '</td>' + '<td>' + $(this).find("aname").text() + '</td>'+ '<td>' + $(this).find("cname").text() + '</td>' + '<td>' + $(this).find("aname").text() + '</td>' +' </tr>');  
-		$("#loading").hide();  
+
+	$(xml).find("athlete").each(function() { 
+		aid = $(this).find("aid").text();
+		strcountry='';
+		strsport='';
+		$(this).find("cname").each(function(){
+			strcountry += $(this).text() + '<br/>';
+		});
+		$(this).find("sname").each(function(){
+			strsport += $(this).text() + '<br/>';
+		});
+		$("#athlete").append('<tr id="aid-' + aid + '">' + '<td>' + aid + '</td>' + '<td>' + $(this).find("aname").text() + '</td>'+ '<td>' + strcountry + '</td>' + '<td>' + strsport + '</td>' +' </tr>');  
 	});  
 	$(xml).find("country").each(function() {   
-		$("#country").append('<tr>' + '<td>' + $(this).find("iocCode").text() + '</td>' + '<td>' + $(this).find("cname").text() + '</td>' +' </tr>');  
-		$("#loading").hide();  
+		ioc = $(this).find("iocCode").text();
+		$("#country").append('<tr id="ioccode-' + ioc + '">' + '<td>' + $(this).find("iocCode").text() + '</td>' + '<td>' + $(this).find("cname").text() + '</td>' +' </tr>');  
 	});  
-	$(xml).find("sport").each(function() {   
-		$("#sport").append('<tr>' + '<td>' + $(this).find("sid").text() + '</td>' + '<td>' + $(this).find("sname").text() + '</td>' +' </tr>');  
-		$("#loading").hide();  
+	$(xml).find("sport").each(function() {  
+		sid = $(this).find("sid").text();	
+		$("#sport").append('<tr id="sid-' + sid + '">' + '<td>' + $(this).find("sid").text() + '</td>' + '<td>' + $(this).find("sname").text() + '</td>' +' </tr>');  
 	});  
-	$(xml).find("discipline").each(function() {   
-		$("#discipline").append('<tr>' + '<td>' + $(this).find("did").text() + '</td>' + '<td>' + $(this).find("dname").text() + '</td>'+ '<td>' + $(this).find("sname").text() + '</td>' +' </tr>');  
-		$("#loading").hide();  
+	$(xml).find("discipline").each(function() {  
+		did = $(this).find("did").text();	
+		$("#discipline").append('<tr id="did-' + did + '">' + '<td>' + $(this).find("did").text() + '</td>' + '<td>' + $(this).find("dname").text() + '</td>'+ '<td>' + $(this).find("sname").text() + '</td>' +' </tr>');  
 	});
-	$(xml).find("game").each(function() {   
-		$("#game").append('<tr>' + '<td>' + $(this).find("gid").text() + '</td>' + '<td>' + $(this).find("year").text() + '</td>'+ '<td>' + $(this).find("season").text() + '</td>' + '<td>' + $(this).find("city").text() + '</td>' + '<td>' + $(this).find("cname").text() + '</td>' +' </tr>');  
-		$("#loading").hide();  
+	$(xml).find("game").each(function() {
+		gid = $(this).find("gid").text();	
+		$("#game").append('<tr id="gid-' + gid + '">' + '<td>' + $(this).find("gid").text() + '</td>' + '<td>' + $(this).find("year").text() + '</td>'+ '<td>' + $(this).find("season").text() + '</td>' + '<td>' + $(this).find("city").text() + '</td>' + '<td>' + $(this).find("cname").text() + '</td>' +' </tr>');  
 	});		
-	/*data = $.parseJSON(json);
-	$.each(data, function() {
-	      lang += this['aid'] + "<br/>";
-	  });
-	alert(lang);*/
-	//$("table.onglet tbody tr").append("<td><img src='img/addData.png' class='button'/></td>");
-	/*firstRow = $("table.onglet tbody tr").first();
-	leftPos = firstRow.offset().left;
-	topPos = firstRow.offset().top;
-	len = firstRow.width();
-	finalPos = leftPos + len;
-	$("<img src='img/addData.png' class='button add'/>")
-		.appendTo($("body"))
-		.css({
-			position: "absolute",
-			left: finalPos+"px",
-			top: topPos+"px"
-		});
-	alert(finalPos);return false;*/
-	//$("<img src='img/addData.png' class='button add'/>").appendTo($("div#wrapresult"));
+
 	loadOnClick();
 
 }; 
 
 
-$(document).ready(function() {  
+$(document).ready(function() {  	
+
+
 	$("table#athlete").toggleClass('current');
-	$("input#search").unbind('click').click(function(){
+	//$("input#search").unbind('keypress').keypress(function(e){
+	//	if(e.which == 13) {
+	//	$("table.onglet tbody tr:not(.add)").empty();
+	//	getResult();
+	//	}
+	
+	$("label#magnetizer").unbind('click').click(function(){
 		$("table.onglet tbody tr:not(.add)").empty();
-		getResult();
+		
+		var searchstring = $("input.search");
+		keys = Object.keys(searchstring);
+		//for (var i in keys){
+			//alert(searchstring[0].value);
+		//}
+		getResult(searchstring[0].value); //Ajouter un argument (searchString) à getresult!
 	});  
+	
 	$("table.menu td[targ='athlete']").addClass("current");
 	$("table").hide();	
 	
 	$("p.advancedsearch").click(function(){
-	TINY.box.show({iframe:'advancedSearch.html',width:400,height:400,close:false})
+	TINY.box.show({iframe:'advancedSearch.html',width:400,height:435,close:false,boxid:'frameless'})
 	});
 });
 </script>
@@ -200,8 +234,8 @@ $(document).ready(function() {
 <!-- Search field -->
     <form>
 	<img src="img/title.png" id="headimg" alt="Header picture"/>
-        <input type="text" id="search" onfocus="if(this.value == 'Search...') { this.value = ''; }" value = "Search..."></input>
-        <label for="search" onclick="obj=document.getElementById('result').scrollIntoView();">Search</label>
+        <input type="text" class ="search" onfocus="if(this.value == 'Search...') { this.value = ''; }" value = "Search..."></input>
+        <label for="search" id="magnetizer" onclick="obj=document.getElementById('result').scrollIntoView();">Search</label>
 		<p class="advancedsearch">Advanced search</p>
 
     </form>
@@ -216,7 +250,7 @@ $(document).ready(function() {
 		
 
 <table class="onglet" id="athlete">
-   <thead> <tr><th>ID</th> <th>Name</th><th>Country</th> <th>Sport</th> </tr>
+   <thead> <tr><th>ID</th> <th>Name</th><th>Country</th> <th>Sport</th></tr>
    </thead>
    <tbody>
    </tbody>
@@ -250,8 +284,7 @@ $(document).ready(function() {
    </tbody>
 </table>
 
-<div id="error">
-</div>
+
 <!-- Get results-->
 
 

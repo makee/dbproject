@@ -1,0 +1,70 @@
+body {
+	background: #052745;
+}
+
+#headimg {
+	width: 400px;
+	margin: 25px 0px 0px 20px;
+}
+
+#name{
+	font-family: Arial, Verdana, sans-serif;
+	color: rgba(255, 255, 255, 0.8);
+	text-shadow: 0px 1px 3px rgb(0, 20, 30);
+	font-size: 20pt;	
+	margin-left: 20px;
+	margin-top:0px;
+}
+
+table {
+	width: 500px;
+	text-align: center;
+	font-family: Arial, Verdana, sans-serif;
+	text-shadow: 0px 1px 3px rgb(0, 20, 30);
+	background-color:#FFFFFF;
+	border-spacing: 0px;
+	border: none;
+	margin: 50px auto;
+	border-radius:         3px;
+	-moz-border-radius:    3px;
+	-o-border-radius:      3px;
+	-webkit-border-radius: 3px;
+	box-shadow: 0 0 5px #000000;
+}
+
+thead{
+	font-size: 8pt;
+	background-color: rgb(110, 150, 180);
+	color: #FFFFFF;
+}
+
+td, th{
+	padding: 5px;
+}
+
+tbody{
+	font-size: 8pt;
+	color: rgb(0, 10, 20);
+	text-shadow: 0px 1px 3px rgb(180, 200, 220);
+}
+
+table.row tbody tr:hover{
+	background-color: rgb(180, 220, 240);
+}
+
+.gold{ 
+	color: rgb(250, 240, 20);
+}
+
+.silver{
+	color: rgb(180, 180, 180);
+}
+
+.bronze{
+	color: rgb(180, 110, 60);
+}
+
+form {
+	font-size: 8pt;
+	font-family: Arial, Verdana, sans-serif;
+}

@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="details.css" />
+<script type="text/javascript" src="https://ajax.microsoft.com/ajax/jQuery/jquery-1.4.2.min.js"></script>
+<script> 
+
+$(document).ready(function(){
+
+	var url = window.location.href;
+	var qparts = url.split("?");
+	if (qparts.length == 0)
+	{
+		  return "";
+	}
+	var query = qparts[1];
+	var vars = query.split("#");
+	var cat = vars[0];
+	var id = vars[1];
+
+/* Get results */ 
+
+	$.ajax({  
+	type: "GET",  
+	url:"game.xml",
+	//url: "http://dbproject13.azurewebsites.net/queries.php",
+	//data:{
+	//action:'get'+cat,
+	//type:id,	
+	dataType: "xml",
+	success: parseXml
+	});
+	
+	$("table.row").hide();
+	
+	function parseXml(xml)
+	{  
+		if (cat == "athlete"){
+			$("#athlete").show();
+			$(xml).find("athlete").each(function() { 
+				name = $(this).attr("aname");
+				$(this).find("game").each(function() {
+					$("#athlete").append('<tr>' + '<td>' + $(this).attr('gname') + '</td>' + '<td>' + $(this).find("cname").text() + '</td>' + '<td>' + $(this).find("sname").text() + '</td>'  + '<td>' + $(this).find("dname").text() + '</td>' +  '<td>' + $(this).find("medal").text() + '</td>' +' </tr>');  
+				});	
+			});
+		}
+		else if (cat == "country"){
+			$("#country1, #country2").show();	
+			
+			$(xml).find("host").each(function() { 
+				name = $(this).find("cname").text();
+				$("#country1").append('<tr>' + '<td>' + $(this).find("city").text() + '</td>' + '<td>' + $(this).find("year").text() + '</td>' + '<td>' + $(this).find("season").text() + '</td>' +'</tr>');
+				});
+				
+			$(xml).find("participation").each(function() { 
+					$("#country2").append('<tr>' + '<td>' + $(this).find("aname").text() + '</td>' + '<td>' + $(this).find("gname").text() + '</td>' + '<td>' + $(this).find("sname").text() + '</td>'  + '<td>' + $(this).find("dname").text() + '</td>' +  '<td>' + $(this).find("medal").text() + '</td>' +' </tr>');  
+				});
+		}
+		else if (cat == "sport"){
+			$("#sport").show();			
+			$(xml).find("result").each(function() { 
+				name = $(this).find("sname").text();
+				
+				strgame = '';
+				$(this).find("game").each(function(){
+					strgame += '<option>' + $(this).text();
+				});
+				
+				$(xml).find("discipline").each(function() { 				
+				$("#sport").append('<tr>' + '<td>' + $(this).find("dname").text() + '</td>' + '<td>' + '<form><select name="disciplines">' + strgame + '</select></form>' + '</td>' +' </tr>');  	
+				});	
+			});	
+		}
+		else if (cat == "discipline"){
+			$("#discipline").show();			
+			$(xml).find("discipline").each(function() { 
+				name = $(this).attr('name');
+				$("#discipline").append('<tr>' + '<td>' + $(this).find("game").attr('name') + '</td>' + '<td>' + $(this).find("gold").text() + '</td>' + '<td>' +$(this).find("silver").text() + '</td>' + '<td>' +$(this).find("bronze").text() + '</td>' +' </tr>');  
+			});
+		}
+		else if(cat == "game"){
+			$("#game").show();		
+			$(xml).find("game").each(function() { 
+				name = $(this).attr('name');
+				
+				strdiscipline = '';
+				$(this).find("dname").each(function(){
+					strdiscipline += '<option>' + $(this).text();
+				});		
+					
+				$("#game").append('<tr>' + '<td>' + $(this).find("sport").attr('name') + '</td>' + '<td>' + '<form><select name="disciplines">' + strdiscipline + '</select></form>' + '</td>' +' </tr>');  		
+			});
+		}
+		
+		/* Show image title */
+		$("#name").append('<img src="img/' + cat + 'Title.png" id="headimg" alt="header picture"/>');
+		/* Show name */
+		$("#name").append('<p id = "name">' + name + '</p>');
+
+	}; 
+ });
+
+ 
+ </script>
+ 
+<title>Details</title>
+
+</head>
+
+<body>
+
+<div id = "name"></div>
+
+<table class="row" id = "athlete">
+   <thead> <tr><th>Games</th><th>Country</th><th>Sports</th><th>Discipline</th><th>Medals</th></tr>
+   </thead>
+   <tbody>
+   </tbody>
+</table>
+
+<table class="row" id = "country1">
+   <thead> <tr><th>Host City</th><th>Year</th><th>Season</th></tr>
+   </thead>
+   <tbody>
+   </tbody>
+</table>
+
+<table class="row" id = "country2">
+   <thead> <tr><th>Medalists</th><th>Game</th><th>Sports</th><th>Discipline</th><th>Medals</th></tr>
+   </thead>
+   <tbody>
+   </tbody>
+</table>
+
+<table class="row" id = "sport">
+   <thead> <tr><th>Disciplines</th> <th>Games</th></tr>
+   </thead>
+   <tbody>
+   </tbody>
+</table>
+
+<table class="row" id = "discipline">
+   <thead> <tr><th>Games</th><th class="gold">Gold</th><th class="silver">Silver</th><th class="bronze">Bronze</th></tr>
+   </thead>
+   <tbody>
+   </tbody>
+</table>
+
+<table class="row" id = "game">
+   <thead> <tr><th>Sport</th><th>Discipline</th></tr>
+   <!-- <div><span id="span1" class="t">Gold</span><span id="span2" class="t">Silver</span><span id="span3" class="t">Bronze</span></div></th></tr>-->
+   </thead>
+   <tbody>
+   </tbody>
+</table>
+
+</body>
+
+</html>

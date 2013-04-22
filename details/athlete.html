@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="details.css" />
+<script type="text/javascript" src="https://ajax.microsoft.com/ajax/jQuery/jquery-1.4.2.min.js"></script>
+<script> 
+
+$(document).ready(function getValue(varname)
+{
+  var url = window.location.href;
+  var qparts = url.split("?");
+
+  if (qparts.length == 0)
+  {
+    return "";
+  }
+  var id = qparts[1];
+ 
+ 
+/* Get results */ 
+
+$.ajax({  
+type: "GET",  
+url: "athlete.xml",  
+dataType: "xml",
+success: parseXml
+});
+
+function parseXml(xml)
+{  
+	$(xml).find("athlete").each(function() { 
+		if ($(this).find("aid").text() == id) 
+		{
+			aname = $(this).find("aname").text();
+			$("#athlete").append('<tr>' + '<td>' + $(this).find("gname").text() + '</td>' + '<td>' + $(this).find("cname").text() + '</td>' + '<td>' + $(this).find("sname").text() + '</td>'  + '<td>' + $(this).find("dname").text() + '</td>' +  '<td>' + $(this).find("medals").text() + '</td>' +' </tr>');  
+		
+		/* Show name */
+		$("#name").append('<p id = "aname">' + aname + '</p>')
+		}
+		
+		});  
+}; 
+ 
+
+ 
+ });
+ 
+ </script>
+ 
+<title>Athlete details</title>
+
+</head>
+
+<body>
+
+
+
+<img src="img/athleteTitle.png" id="headimg" alt="header picture"/>
+<div id = "name"></div>
+
+<table class="onglet" id = "athlete">
+   <thead> <tr><th>Games</th> <th>Country</th><th>Sports</th><th>Discipline</th><th>Medals</th></tr>
+   </thead>
+   <tbody>
+   </tbody>
+</table>
+
+</body>
+
+</html>

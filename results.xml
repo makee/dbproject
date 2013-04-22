@@ -1,0 +1,56 @@
+<!DOCTYPE note
+[
+<!ELEMENT result (athlete,country,sport,game)>
+<!ELEMENT athlete (#PCDATA)>
+<!ELEMENT country (#PCDATA)>
+<!ELEMENT sport (#PCDATA)>
+<!ELEMENT game (#PCDATA)>
+]>
+
+<result>
+    <athlete>
+        <aid>4GG76QM</aid>
+        <aname>Georgios Tsitas</aname>
+        <cname>Greece</cname>
+        <sname>Wrestling</sname>
+    </athlete>
+    <athlete>
+        <aid>BBY8D8R</aid>
+        <aname>Georges van de Poele</aname>
+        <cname>Belgium</cname>
+        <sname>Equestrian vaulting</sname>
+    </athlete>
+    <country>
+        <iocCode>ALG</iocCode>
+        <cname>Algeria</cname>
+    </country>
+     <country>
+        <iocCode>GDR</iocCode>
+        <cname>German Democratic Republic</cname>
+    </country>
+    <sport>
+        <sid>CON-G9J</sid>
+        <sname>Contract bridge</sname>
+    </sport>
+    <sport>
+        <sid>LUG-75Y</sid>
+        <sname>Luge</sname>
+    </sport>
+    <discipline>
+        <did>2N2NVBF</did>
+        <dname>Dressage</dname>
+        <sname>Equestrian vaulting</sname>
+    </discipline>
+     <discipline>
+        <did>3JDRJ8R</did>
+        <dname>Running target</dname>
+        <sname>Shooting sports</sname>
+    </discipline>
+    <game>
+        <gid>1932SUSA</gid>
+        <year>1932</year>
+        <season>Summer</season>
+        <city>Los Angeles</city>
+        <cname>United States of America</cname>
+    </game>
+</result>
