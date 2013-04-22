@@ -5,11 +5,11 @@ include_once('class.php');
 
 $_POST = $_GET;
 
-if($_POST['action'] == 'get_athlete' && isset($_POST['aid']))
+if($_POST['action'] == 'get_athlete' && isset($_POST['type']))
 {
 	$dom = new DomDocument("1.0", "UCS-2");
 	$root = $dom->createElement('result');
-	$aid = $_GET['aid'];
+	$aid = $_GET['type'];
 	$relations = Athlete::getAthleteDetail($aid);
 	$relations = array_map("unserialize", array_unique(array_map("serialize", $relations)));
 	$athlete = $dom->createElement('athlete');
@@ -66,17 +66,17 @@ if($_POST['action'] == 'get_athlete' && isset($_POST['aid']))
 }
 
 
-if ($_GET['action'] == 'get_country' && isset($_GET['iocCode']))
+if ($_GET['action'] == 'get_country' && isset($_GET['type']))
 {
-	$limit = !isset($_GET['limit'])?50:$_GET['limit'];
+	$limit = !isset($_GET['limit'])?10:$_GET['limit'];
 
 	$dom = new DomDocument("1.0", "UCS-2");
 	$root = $dom->createElement('result');
-	$iocCode = $_GET['iocCode'];
+	$iocCode = $_GET['type'];
 	$country = Country::getCountryDetail($iocCode, $limit);
 
 	$country['host'] = array_map("unserialize", array_unique(array_map("serialize", $country['host'])));
-	$root->appendChild($dom->createElement('cname', $country['host'][0]->cname)); 
+	$root->appendChild($dom->createElement('cname', $country['host']->cname)); 
 	foreach($country['host'] as $hos)
 	{
 		$host = $dom->createElement('host');
@@ -102,7 +102,7 @@ if ($_GET['action'] == 'get_country' && isset($_GET['iocCode']))
 		$gname = $conn->query("SELECT * FROM Game WHERE gid LIKE '$gid'")->fetchAll(PDO::FETCH_CLASS, 'Game');
 		$gname = $gname[0];
 		$game = $dom->createElement('gname', $gname->writeFullGame());
-		$athl = $dom->createElement('aname', $medal['aname']);
+		$athl = $dom->createElement('aname', htmlentities($medal['aname']));
 		$athl->setAttribute('aid', $medal['aid']);
 		$spo = $dom->createElement('sname', $medal['sname']);
 		$spo->setAttribute('sid', $medal['sid']);
@@ -140,11 +140,11 @@ if ($_GET['action'] == 'get_country' && isset($_GET['iocCode']))
 
 }
 
-if ($_GET['action'] == 'get_sport' && isset($_GET['sid']))
+if ($_GET['action'] == 'get_sport' && isset($_GET['type']))
 {
-	$sport = Sport::getSportDetail($_GET['sid']);
+	$sport = Sport::getSportDetail($_GET['type']);
 	$sname = $sport[0]['sname'];
-	$sid = $_GET['sid'];
+	$sid = $_GET['type'];
 	$dom = new DomDocument("1.0", "UCS-2");
 	$root = $dom->createElement('result');
 	$spo = $dom->createElement('sname', $sname);
@@ -172,10 +172,10 @@ if ($_GET['action'] == 'get_sport' && isset($_GET['sid']))
 	$xmlDat = $dom->saveXML($root);
 	echo $xmlDat;
 }
-if ($_GET['action'] == 'get_discipline' && isset($_GET['did']))
+if ($_GET['action'] == 'get_discipline' && isset($_GET['type']))
 {
-	$disc = Discipline::getDisciplineDetail($_GET['did']);
-	$did = $_GET['did'];
+	$disc = Discipline::getDisciplineDetail($_GET['type']);
+	$did = $_GET['type'];
 	$dname = Discipline::getDiscipline($did);
 	$dom = new DomDocument("1.0", "UCS-2");
 	$root = $dom->createElement('result');
@@ -209,10 +209,10 @@ if ($_GET['action'] == 'get_discipline' && isset($_GET['did']))
 	echo $xmlDat;
 }
 
-if ($_GET['action'] == 'get_game' && isset($_GET['gid']))
+if ($_GET['action'] == 'get_game' && isset($_GET['type']))
 {
-	$g = Game::getGameDetail($_GET['gid']);
-	$gid = $_GET['gid'];
+	$g = Game::getGameDetail($_GET['type']);
+	$gid = $_GET['type'];
 	$gname = $conn->query("SELECT * FROM Game WHERE gid LIKE '$gid'")->fetchAll(PDO::FETCH_CLASS, 'Game');
 	$gname = $gname[0];
 	$dom = new DomDocument("1.0", "UCS-2");

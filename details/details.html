@@ -24,11 +24,11 @@ $(document).ready(function(){
 
 	$.ajax({  
 	type: "GET",  
-	url:"game.xml",
-	//url: "http://dbproject13.azurewebsites.net/queries.php",
-	//data:{
-	//action:'get'+cat,
-	//type:id,	
+	//url:"game.xml",
+	url: "../queries.php",
+	data:{
+	action:'get_'+cat,
+	type:id},	
 	dataType: "xml",
 	success: parseXml
 	});
