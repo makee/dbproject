@@ -110,7 +110,10 @@ if ($_GET['action'] == 'get_country' && isset($_GET['type']))
 		$spo = $dom->createElement('sname', $medal['sname']);
 		$spo->setAttribute('sid', $medal['sid']);
 		$did = $medal['did'];
-		$dname = $conn->query("SELECT * FROM Discipline WHERE did = '$did'")->fetchAll(PDO::FETCH_CLASS, 'Discipline')[0]->display()[1];
+		$dname = $conn->query("SELECT * FROM Discipline WHERE did = '$did'")->fetchAll(PDO::FETCH_CLASS, 'Discipline');
+		$dname = $dname[0];
+		$dname = $dname->display();
+		$dname = $dname[1];
 		$dis = $dom->createElement('dname', $dname);
 		$dis->setAttribute('did', $did);
 		
