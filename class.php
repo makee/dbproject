@@ -1,6 +1,5 @@
 <?
 include_once('connect.php');
-include_once('array.php');
 mb_internal_encoding("UCS-2");
 
 class Athlete
