@@ -163,7 +163,7 @@ if ($_GET['action'] == 'get_sport' && isset($_GET['type']))
 		$did = $disci['did'];
 		$dname = Discipline::getDiscipline($did);
 		$disc->setAttribute('did',$did);
-		$dstring = $dname->display()
+		$dstring = $dname->display();
 		$dsting = $dstring[1];
 		$dn = $dom->createElement('dname', $dstring);
 		$gid = $disci['gid'];
