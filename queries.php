@@ -27,7 +27,9 @@ if($_POST['action'] == 'get_athlete' && isset($_POST['type']))
 		$sport->setAttribute('sid', $result['sid']);	
 
 		$did = $result['did'];
-		$dname = $conn->query("SELECT * FROM Discipline WHERE did = '$did'")->fetchAll(PDO::FETCH_CLASS, 'Discipline')[0]->display()[1];
+		$dname = $conn->query("SELECT * FROM Discipline WHERE did = '$did'")->fetchAll(PDO::FETCH_CLASS, 'Discipline')[0];
+		$dname = $dname->display();
+		$dname = $dname[1];
 		$dis = $dom->createElement('dname', $dname);
 		$dis->setAttribute('did', $did);
 
