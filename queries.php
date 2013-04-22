@@ -186,7 +186,9 @@ if ($_GET['action'] == 'get_discipline' && isset($_GET['type']))
 	$dname = Discipline::getDiscipline($did);
 	$dom = new DomDocument("1.0", "UCS-2");
 	$root = $dom->createElement('result');
-	$d = $dom->createElement('dname', $dname->display()[1]);
+	$dstring = $dname->display();
+	$dstring = $dstring[1];
+	$d = $dom->createElement('dname', );
 	$d->setAttribute('did', $did);
 	$root->appendChild($d);
 
@@ -237,7 +239,9 @@ if ($_GET['action'] == 'get_game' && isset($_GET['type']))
 		$sport->setAttribute('sid', $s['sid']);
 		$did = $s['did'];
 		$dname = Discipline::getDiscipline($did);
-		$dname = htmlentities($dname->display()[1]);
+		$dstring = $dname->display();
+		$dstirng = $string[1];
+		$dname = htmlentities($dstring);
 		$disc = $dom->createElement('discipline', $dname);
 		$disc->setAttribute('did', $did);
 		
