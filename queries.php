@@ -79,7 +79,7 @@ if ($_GET['action'] == 'get_country' && isset($_GET['type']))
 	$country = Country::getCountryDetail($iocCode, $limit);
 
 	$country['host'] = array_map("unserialize", array_unique(array_map("serialize", $country['host'])));
-	$root->appendChild($dom->createElement('cname', $country['host']->cname)); 
+	$root->appendChild($dom->createElement('cname', $country['host'][0]->cname)); 
 	foreach($country['host'] as $hos)
 	{
 		$host = $dom->createElement('host');
