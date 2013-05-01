@@ -250,7 +250,7 @@ if ($_GET['action'] == 'get_game' && isset($_GET['type']))
 		$did = $s['did'];
 		$dname = Discipline::getDiscipline($did);
 		$dstring = $dname->display();
-		$dstirng = $string[1];
+		$dstring = $dstring[1];
 		$dname = htmlentities($dstring);
 		$disc = $dom->createElement('discipline', $dname);
 		$disc->setAttribute('did', $did);

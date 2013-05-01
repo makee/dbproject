@@ -195,7 +195,9 @@ class Discipline
 			foreach ($result as $s)
 			{
 				$disc = $dom->createElement('discipline');
-				$dname = $dom->createElement('dname', utf8_encode(Discipline::getDiscipline($s['did'])->display()[1]));
+				$temp = Discipline::getDiscipline($s['did'])->display();
+				$temp = $temp[0];
+				$dname = $dom->createElement('dname', $temp);
 				$sname = $dom->createElement('sname', utf8_encode($s['sname']));
 				$disc->setAttribute('did', $s['did']);
 				$disc->appendChild($sname);
