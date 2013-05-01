@@ -124,13 +124,12 @@ $(document).ready(function() {
 		tableResult(true);
 		$.ajax({  
 		type: "GET",  
-		url: "results.xml",  
+		url: "queries.php",  
 		//url: "http://dbproject13.azurewebsites.net/queries.php",
-		/*data:{
+		data:{
 			action:'globalquery',
-			string: searchstring,
-			query: query,
-		},*/
+			keyword: searchstring,
+		},
 		dataType: "xml",  
 		success: parseXml
 		});
@@ -161,8 +160,8 @@ function loadOnClick()
 function parseXml(xml)
 {  
 
-	$(xml).find("athlete").each(function() { 
-		aid = $(this).find("aid").text();
+	$(xml).find("athletes>athlete").each(function() { 
+		aid = $(this).attr("aid");
 		strcountry='';
 		strsport='';
 		$(this).find("cname").each(function(){
@@ -173,21 +172,21 @@ function parseXml(xml)
 		});
 		$("#athlete").append('<tr id="aid-' + aid + '">' + '<td>' + aid + '</td>' + '<td>' + $(this).find("aname").text() + '</td>'+ '<td>' + strcountry + '</td>' + '<td>' + strsport + '</td>' +' </tr>');  
 	});  
-	$(xml).find("country").each(function() {   
-		ioc = $(this).find("iocCode").text();
-		$("#country").append('<tr id="ioccode-' + ioc + '">' + '<td>' + $(this).find("iocCode").text() + '</td>' + '<td>' + $(this).find("cname").text() + '</td>' +' </tr>');  
+	$(xml).find("countries>country").each(function() {   
+		ioc = $(this).attr("iocCode");
+		$("#country").append('<tr id="ioccode-' + ioc + '">' + '<td>' + ioc + '</td>' + '<td>' + $(this).find("cname").text() + '</td>' +' </tr>');  
 	});  
-	$(xml).find("sport").each(function() {  
-		sid = $(this).find("sid").text();	
-		$("#sport").append('<tr id="sid-' + sid + '">' + '<td>' + $(this).find("sid").text() + '</td>' + '<td>' + $(this).find("sname").text() + '</td>' +' </tr>');  
+	$(xml).find("sports>sport").each(function() {  
+		sid = $(this).attr("sid");	
+		$("#sport").append('<tr id="sid-' + sid + '">' + '<td>' + sid + '</td>' + '<td>' + $(this).find("sname").text() + '</td>' +' </tr>');  
 	});  
-	$(xml).find("discipline").each(function() {  
-		did = $(this).find("did").text();	
-		$("#discipline").append('<tr id="did-' + did + '">' + '<td>' + $(this).find("did").text() + '</td>' + '<td>' + $(this).find("dname").text() + '</td>'+ '<td>' + $(this).find("sname").text() + '</td>' +' </tr>');  
+	$(xml).find("disciplines>discipline").each(function() {  
+		did = $(this).attr("did");	
+		$("#discipline").append('<tr id="did-' + did + '">' + '<td>' + did+ '</td>' + '<td>' + $(this).find("dname").text() + '</td>'+ '<td>' + $(this).find("sname").text() + '</td>' +' </tr>');  
 	});
-	$(xml).find("game").each(function() {
-		gid = $(this).find("gid").text();	
-		$("#game").append('<tr id="gid-' + gid + '">' + '<td>' + $(this).find("gid").text() + '</td>' + '<td>' + $(this).find("year").text() + '</td>'+ '<td>' + $(this).find("season").text() + '</td>' + '<td>' + $(this).find("city").text() + '</td>' + '<td>' + $(this).find("cname").text() + '</td>' +' </tr>');  
+	$(xml).find("games>game").each(function() {
+		gid = $(this).attr("gid");
+		$("#game").append('<tr id="gid-' + gid + '">' + '<td>' + gid + '</td>' + '<td>' + $(this).find("year").text() + '</td>'+ '<td>' + $(this).find("season").text() + '</td>' + '<td>' + $(this).find("city").text() + '</td>' + '<td>' + $(this).find("cname").text() + '</td>' +' </tr>');  
 	});		
 
 	loadOnClick();

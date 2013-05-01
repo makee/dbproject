@@ -3,6 +3,16 @@ header("Content-Type: text/xml");
 include_once('connect.php');
 include_once('class.php');
 
+function addTree2Node($dom, &$root, $tree)
+{
+	if ($tree != '')
+	{
+		$d = new DomDocument("1.0", "UCS-2");
+		$d->loadXML($tree);
+		$root->appendChild($dom->importNode($d->documentElement, true));
+	}
+}
+
 $_POST = $_GET;
 
 if($_POST['action'] == 'get_athlete' && isset($_POST['type']))
@@ -253,5 +263,21 @@ if ($_GET['action'] == 'get_game' && isset($_GET['type']))
 	echo $xmlDat;
 }
 
+if ($_GET['action'] == 'globalquery' && isset($_GET['keyword']))
+{
+	$keyword = $_GET['keyword'];
+	$dom = new DomDocument("1.0", "UCS-2");
+	$root = $dom->createElement('result');
+
+	addTree2Node($dom, $root, Athlete::search($keyword));
+	addTree2Node($dom, $root, Country::search($keyword));
+	addTree2Node($dom, $root, Sport::search($keyword));
+	addTree2Node($dom, $root, Discipline::search($keyword));
+	addTree2Node($dom, $root, Game::search($keyword));
+
+	$xml = $dom->saveXML($root);
+	$xml = preg_replace('/ +</', '<', $xml);
+	echo $xml;
+}
 
 ?>
