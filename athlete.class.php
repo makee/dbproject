@@ -216,8 +216,9 @@ class Athlete
 					foreach($s['disc'] as $key => $d)
 					{
 						$disc = $dom->createElement('discipline');
-						$dname = Discipline::getDiscipline($key);
-						$dname = $dom->createElement('dname', $dname->display()[1]);
+						$dname = Discipline::getDiscipline($key)->display();
+						$tmp = $dname[1];
+						$dname = $dom->createElement('dname', $tmp);
 						$did = $dom->createElement('did', $key);
 						$medal = $dom->createElement('medal', $d['medal']);
 						$disc->appendChild($did);
