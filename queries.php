@@ -315,7 +315,7 @@ if ($_GET['action'] == 'specialquery' && $_GET['type'] == 'A')
 	$root = $dom->createElement('results');
 	foreach ($results as $athl)
 	{
-		$aname = $dom->createElement('aname', utf8_encode($athl->aname));
+		$aname = $dom->createElement('aname', $athl->aname);
 		$aname->setAttribute('aid', $athl->aid);
 		$root->appendChild($aname);
 	}
