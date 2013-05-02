@@ -315,9 +315,12 @@ if ($_GET['action'] == 'specialquery' && $_GET['type'] == 'A')
 	$root = $dom->createElement('results');
 	foreach ($results as $athl)
 	{
-		$aname = $dom->createElement('aname', $athl->aname);
-		$aname->setAttribute('aid', $athl->aid);
-		$root->appendChild($aname);
+		$result = $dom->createElement('result');
+		$aname = $dom->createElement('Name', $athl->aname);
+		$aid = $dom->createElement('ID', $athl->aid);
+		$result->appendChild($aname);
+		$result->appendChild($aid);
+		$root->appendChild($result);
 	}
 	echo $dom->saveXML($root);
 }
