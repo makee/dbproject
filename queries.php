@@ -280,4 +280,45 @@ if ($_GET['action'] == 'globalquery' && isset($_GET['keyword']))
 	echo $xml;
 }
 
+if ($_GET['action'] == 'specialquery' && $_GET['type'] == 'A')
+{
+	$query = "
+		SELECT a.aname 
+			, a.aid 
+		FROM athlete a 
+		GROUP BY a.aid 
+			, a.aname 
+		HAVING a.aid IN 
+		( 
+		 ( 
+		  SELECT p1.aid 
+		  FROM participation p1 
+		  	, game g1 
+		  WHERE p1.gid = g1.gid 
+		  	AND g1.season = 's' 
+		  	AND p1.medal < >0
+		 ) 
+		 INTERSECT 
+		 ( 
+		  SELECT p2.aid 
+		  FROM participation p2 
+		  	, game g2 
+		  WHERE p2.gid = g2.gid 
+		  	AND g2.season = 'w' 
+		  	AND p2.medal < >0
+		 )
+		)
+	";
+	$statement = $conn->query($query);
+	$results = $statement->fetchAll(PDO::FETCH_CLASS, 'Athlete');
+	$dom = new DOMDocument('1.0', 'UCS-2');
+	$root = $dom->createElement('results');
+	foreach ($results as $athl)
+	{
+		$aname = $dom->createElement('aname', utf8_encode($athl->aname));
+		$aname->setAttribute('aid', $athl->aid);
+		$root->appendChild($aname);
+	}
+	echo $dom->saveXML($root);
+}
 ?>
