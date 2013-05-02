@@ -215,6 +215,17 @@ $(document).ready(function() {
 		getResult(searchstring[0].value); //Ajouter un argument (searchString) à getresult!
 	});  
 	
+	$('input.search').keypress(function (e) { // getResult if enter key is pressed
+		if (e.which == 13){ 
+			$("table.onglet tbody tr:not(.add)").empty();	
+			var searchstring = $("input.search");
+			keys = Object.keys(searchstring);
+			getResult(searchstring[0].value);
+			//return false;
+			e.preventDefault();
+		}	
+	}); 
+	
 	$("table.menu td[targ='athlete']").addClass("current");
 	$("table").hide();	
 	
