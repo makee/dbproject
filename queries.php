@@ -1,5 +1,5 @@
 <?
-//header("Content-Type: text/xml");
+header("Content-Type: text/xml");
 include_once('connect.php');
 include_once('class.php');
 
