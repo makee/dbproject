@@ -155,6 +155,23 @@ function loadOnClick()
 	});
 
 }
+
+function getAdvancedResult(query)
+{
+	$.ajax({  
+		type: "GET",  
+		url: "queries.php",  
+		data:{
+			action:'advanced',
+			type: query,
+		},
+		dataType: "xml",  
+		success: function(xml){
+			test = $(xml).find('result').first().find('row').first().text();
+			alert(test);
+		}
+	});
+}
  
 
 function parseXml(xml)
