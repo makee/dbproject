@@ -38,7 +38,7 @@ class Athlete
 		global $conn;
 		$athl = $name;
 //		$athl = utf8_encode($athl);
-	//	$athl = htmlentities($athl);
+		$athl = htmlentities($athl);
 	//	$conn->quote($athl);
 		$athl = preg_replace('/(?<!\')\'(?!\')/', '\'\'', $athl);
 		$query = "SELECT aid, aname FROM athlete WHERE aname LIKE N'%$athl%'";// CONVERT(NCHAR(70), ?)";

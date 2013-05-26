@@ -324,4 +324,99 @@ if ($_GET['action'] == 'specialquery' && $_GET['type'] == 'A')
 	}
 	echo $dom->saveXML($root);
 }
+if ($_GET['action'] == 'advanced' && isset($_GET['type']))
+{
+	$query = array(
+		'A' => "	 
+		SELECT a.aname
+		, a.aid 
+		FROM athlete a
+		GROUP BY a.aid
+		, a.aname
+		HAVING a.aid IN
+		(
+		 (
+		  SELECT p1.aid 
+		  FROM participation p1
+		  , game g1
+		  WHERE p1.gid=g1.gid 
+		  AND g1.season='s' 
+		  AND p1.medal <>0
+		 )
+		 INTERSECT
+		 (
+		  SELECT p2.aid 
+		  FROM participation p2
+		  , game g2
+		  WHERE p2.gid=g2.gid 
+		  AND g2.season='w' 
+		  AND p2.medal <>0
+		 )
+	)",
+		'B' => "
+				SELECT a.aname 
+				FROM athlete a
+				, participation p
+				WHERE a.aid=p.aid 
+				AND p.medal=1 
+				AND a.aid NOT IN 
+				(
+				 SELECT p1.aid 
+				 FROM participation p1
+				 , participation p2 
+				 WHERE p1.aid=p2.aid 
+				 AND p1.gid<>p2.gid
+				)
+				GROUP BY a.aname
+	",
+		'C' => "
+				SELECT c1.cname
+				, g1.gid
+				, g1.year 
+				FROM participation p1
+				, represents r1
+				, game g1
+				, country c1
+				WHERE p1.medal <> 0 
+				AND p1.aid=r1.aid 
+				AND g1.gid=r1.gid 
+				AND c1.iocCode=r1.iocCode
+				GROUP BY c1.cname
+				, r1.iocCode
+				, g1.gidi
+				, g1.year HAVING g1.year <= ALL 
+				(
+				 SELECT g2.year 
+				 FROM game g2
+				 , represents r2 
+				 WHERE r2.iocCode=r1.iocCode
+				 AND r2.gid=g2.gid
+				)
+	"
+	);
+	$id_bind = array(
+		'aid' => 'aname',
+		'iocCode' => 'cname',
+		'sid' => 'sname'
+	);
+	$query_num = $_GET['type'];
+	$stt = $conn->query($query[$query_num]);
+	$results = $stt->fetchAll(PDO::FETCH_ASSOC);
+	$dom = new DOMDocument('1.0', 'UCS-2');
+	$root = $dom->createElement('results');
+	foreach($results as $result)
+	{
+		$row = $dom->createElement('row');
+		foreach($result as $key => $colres)
+		{
+			$colres = utf8_encode($colres);
+			$colres = preg_replace('/ +$/', '', $colres);
+			$col = $dom->createElement($key, $colres);
+			$row->appendChild($col);
+		}
+		$root->appendChild($row);
+	}
+	echo $dom->saveXML($root);
+		
+}
 ?>
