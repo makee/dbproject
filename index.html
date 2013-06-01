@@ -258,7 +258,7 @@ function parseXml(xml)
 		$('table#game').append('<tr><td colspan=10><i>No result</i></td></tr>');
 	}
 	loadOnClick();
-	$('table.onglet:gt(3)').hide();
+	$('table#discipline tr').slice(1,2).hide();
 
 }; 
 
