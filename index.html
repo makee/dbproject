@@ -133,7 +133,8 @@ $(document).ready(function() {
 			keyword: searchstring,
 		},
 		beforeSend: function(){
-			$('#loading').html('Loading');
+			$('#loading').html("<img src='img/loader.gif'/>");
+			$('#query').hide();
 		},
 		dataType: "xml",  
 		success: function(xml){
@@ -236,8 +237,28 @@ function parseXml(xml)
 		$("#game").append('<tr id="gid-' + gid + '">' + '<td>' + gid + '</td>' + '<td>' + $(this).find("year").text() + '</td>'+ '<td>' + $(this).find("season").text() + '</td>' + '<td>' + $(this).find("city").text() + '</td>' + '<td>' + $(this).find("cname").text() + '</td>' +' </tr>');  
 	});		
 		$("td:[targ='game'] span.number").empty().append(' ('+$(xml).find("games>game").length+')');
-
+	if ($('table#athlete tr').length == 1)
+	{
+		$('table#athlete').append('<tr><td colspan=10><i>No result</i></td></tr>');
+	}
+	if ($('table#country tr').length == 1)
+	{
+		$('table#country').append('<tr><td colspan=10><i>No result</i></td></tr>');
+	}
+	if ($('table#sport tr').length == 1)
+	{
+		$('table#sport').append('<tr><td colspan=10><i>No result</i></td></tr>');
+	}
+	if ($('table#discipline tr').length == 1)
+	{
+		$('table#discipline').append('<tr><td colspan=10><i>No result</i></td></tr>');
+	}
+	if ($('table#game tr').length == 1)
+	{
+		$('table#game').append('<tr><td colspan=10><i>No result</i></td></tr>');
+	}
 	loadOnClick();
+	$('table.onglet:gt(3)').hide();
 
 }; 
 
@@ -302,7 +323,6 @@ $(document).ready(function() {
 <!-- End search field -->
 
 <a id="result"/>
-<div id="loading"></div>
 
 <!-- Onglets-->
 <div id="bandeau_wrap">
@@ -344,6 +364,8 @@ $(document).ready(function() {
    <tbody>
    </tbody>
 </table>
+
+<div id="loading"></div>
 
 <table class="onglet" id="query">
 
