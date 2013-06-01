@@ -164,19 +164,19 @@ table.onglet tbody tr:hover{
 
 div.wrapadd{
 	position:relative;
-	right: 460px;
+	right: 60px;
 	top: 37px;
 }
 
 div.wrapvalid{
 	position:relative;
-	left: 770px;
+	left: 760px;
 	top: 59px;
 }
 
 div.wrapcancel{
 	position:relative;
-	left: 790px;
+	left: 780px;
 	top: 59px;
 }
 
