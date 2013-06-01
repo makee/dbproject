@@ -1,5 +1,5 @@
 body {
-	background: #052745;
+	background: rgb(240,240,240);
 }
 
 #headimg {
@@ -9,8 +9,7 @@ body {
 
 #name{
 	font-family: Arial, Verdana, sans-serif;
-	color: rgba(255, 255, 255, 0.8);
-	text-shadow: 0px 1px 3px rgb(0, 20, 30);
+	color: #222;
 	font-size: 20pt;	
 	margin-left: 20px;
 	margin-top:0px;
@@ -20,22 +19,20 @@ table {
 	width: 500px;
 	text-align: center;
 	font-family: Arial, Verdana, sans-serif;
-	text-shadow: 0px 1px 3px rgb(0, 20, 30);
-	background-color:#FFFFFF;
+	background-color:rgb(245, 245, 245);
 	border-spacing: 0px;
-	border: none;
+	border: 1px solid rgba(200, 200, 200, 1);
 	margin: 50px auto;
 	border-radius:         3px;
 	-moz-border-radius:    3px;
 	-o-border-radius:      3px;
 	-webkit-border-radius: 3px;
-	box-shadow: 0 0 5px #000000;
 }
 
 thead{
-	font-size: 8pt;
-	background-color: rgb(110, 150, 180);
-	color: #FFFFFF;
+	font-size: 9pt;
+	background-color: rgb(220, 220, 220);
+	color: #111;
 }
 
 td, th{
@@ -43,13 +40,12 @@ td, th{
 }
 
 tbody{
-	font-size: 8pt;
-	color: rgb(0, 10, 20);
-	text-shadow: 0px 1px 3px rgb(180, 200, 220);
+	font-size: 9pt;
+	color: #222;
 }
 
 table.row tbody tr:hover{
-	background-color: rgb(180, 220, 240);
+	background-color: rgb(240, 240, 240);
 }
 
 .gold{ 
@@ -65,6 +61,6 @@ table.row tbody tr:hover{
 }
 
 form {
-	font-size: 8pt;
+	font-size: 9pt;
 	font-family: Arial, Verdana, sans-serif;
 }
