@@ -16,7 +16,7 @@ class Country
 	public static function findCountry($country)
 	{
 		global $conn;
-		$country = utf8_encode($country);
+		//$country = utf8_encode($country);
 		$country = "%$country%";
 		$medIOC = $conn->prepare("SELECT iocCode, cname FROM Country WHERE cname LIKE ?");
 		$medIOC->execute(array($country));
