@@ -74,7 +74,7 @@ input.addInfo{
 	margin:0px;
 	color: rgb(100, 100, 100);
 	font-size: 9pt;
-	text-align: center;
+	text-align: lesft;
 }
 
 
@@ -102,12 +102,12 @@ p.advancedsearch {
 
 table:not(.menu){
 	width: 800px;
-	text-align: left;
+	text-align: justify;
 	font-family: Arial, Verdana, sans-serif;
 	background-color:rgb(245, 245, 245);
 	border-spacing: 0px;
 	border: 1px solid rgba(200, 200, 200, 1);
-	margin: 8px auto;
+	margin: 0px auto;
 	border-radius:         3px;
 	-moz-border-radius:    3px;
 	-o-border-radius:      3px;
@@ -164,26 +164,26 @@ table.onglet tbody tr:hover{
 
 div.wrapadd{
 	position:relative;
-	right: 260px;
+	right: 460px;
 	top: 37px;
 }
 
 div.wrapvalid{
 	position:relative;
-	left: 370px;
+	left: 770px;
 	top: 59px;
 }
 
 div.wrapcancel{
 	position:relative;
-	left: 390px;
+	left: 790px;
 	top: 59px;
 }
 
 img.button {
 	width: 15px;
 	height: 15px;
-	position :absolute;
+	position: absolute;
 	margin-left:0px;
 	cursor:pointer;
 }
@@ -200,4 +200,8 @@ img.button {
 
 #query{
 	display:none;
+}
+
+#loading{
+position: center;
 }
