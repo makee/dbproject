@@ -3,12 +3,13 @@
 
 <head>
 <meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
 <link rel="stylesheet" href="style.css" />
 <link rel="stylesheet" href="tinybox/style.css" />
 <script type="text/javascript" src="https://ajax.microsoft.com/ajax/jQuery/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="tinybox/tinybox.js"></script>
 <script type="text/javascript" src="tinybox/packed.js"></script>
-<script type="text/javascript">  
+<script type="text/javascript" charset="UTF-8">  
 
 emptyInsert = function(item)
 {
@@ -131,8 +132,14 @@ $(document).ready(function() {
 			action:'globalquery',
 			keyword: searchstring,
 		},
+		beforeSend: function(){
+			$('#loading').html('Loading');
+		},
 		dataType: "xml",  
-		success: parseXml
+		success: function(xml){
+			parseXml(xml);
+			$('#loading').empty();
+		}
 		});
 		//alert(searchstring);
 	}
@@ -174,6 +181,7 @@ function getAdvancedResult(query)
 				hname = (this).nodeName;
 				hname = hname.replace(/aname/, 'Athlete');
 				hname = hname.replace(/aid/, 'AID');
+				hname = hname.replace(/cname/, 'Country');
 				headers.push(hname);	
 			});
 			$('#query').append('<thead></thead>').show();
@@ -207,22 +215,27 @@ function parseXml(xml)
 		});
 		$("#athlete").append('<tr id="aid-' + aid + '">' + '<td>' + aid + '</td>' + '<td>' + $(this).find("aname").text() + '</td>'+ '<td>' + strcountry + '</td>' + '<td>' + strsport + '</td>' +' </tr>');  
 	});  
+		$("td:[targ='athlete'] span.number").empty().empty().append(' ('+$(xml).find("athletes>athlete").length+')');
 	$(xml).find("countries>country").each(function() {   
 		ioc = $(this).attr("iocCode");
 		$("#country").append('<tr id="ioccode-' + ioc + '">' + '<td>' + ioc + '</td>' + '<td>' + $(this).find("cname").text() + '</td>' +' </tr>');  
 	});  
+		$("td:[targ='country'] span.number").empty().append(' ('+$(xml).find("countries>country").length+')');
 	$(xml).find("sports>sport").each(function() {  
 		sid = $(this).attr("sid");	
 		$("#sport").append('<tr id="sid-' + sid + '">' + '<td>' + sid + '</td>' + '<td>' + $(this).find("sname").text() + '</td>' +' </tr>');  
 	});  
+		$("td:[targ='sport'] span.number").empty().append(' ('+$(xml).find("athletes>athlete").length+')');
 	$(xml).find("disciplines>discipline").each(function() {  
 		did = $(this).attr("did");	
 		$("#discipline").append('<tr id="did-' + did + '">' + '<td>' + did+ '</td>' + '<td>' + $(this).find("dname").text() + '</td>'+ '<td>' + $(this).find("sname").text() + '</td>' +' </tr>');  
 	});
+		$("td:[targ='discipline'] span.number").empty().append(' ('+$(xml).find("disciplines>discipline").length+')');
 	$(xml).find("games>game").each(function() {
 		gid = $(this).attr("gid");
 		$("#game").append('<tr id="gid-' + gid + '">' + '<td>' + gid + '</td>' + '<td>' + $(this).find("year").text() + '</td>'+ '<td>' + $(this).find("season").text() + '</td>' + '<td>' + $(this).find("city").text() + '</td>' + '<td>' + $(this).find("cname").text() + '</td>' +' </tr>');  
 	});		
+		$("td:[targ='game'] span.number").empty().append(' ('+$(xml).find("games>game").length+')');
 
 	loadOnClick();
 
@@ -289,11 +302,12 @@ $(document).ready(function() {
 <!-- End search field -->
 
 <a id="result"/>
+<div id="loading"></div>
 
 <!-- Onglets-->
 <div id="bandeau_wrap">
-<table class="menu"><tr><td targ="athlete">Athlete</td><td targ="country">Country</td>
-		<td targ="sport">Sport</td><td targ="discipline">Discipline</td><td targ="game">Game</td></tr></table>
+<table class="menu"><tr><td targ="athlete">Athlete<span class="number"/></td><td targ="country">Country<span class="number"/></td>
+		<td targ="sport">Sport<span class="number"/></td><td targ="discipline">Discipline<span class="number"/></td><td targ="game">Game<span class="number"/></td></tr></table>
 </div>		
 
 <table class="onglet" id="athlete">
