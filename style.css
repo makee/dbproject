@@ -102,7 +102,7 @@ p.advancedsearch {
 
 table:not(.menu){
 	width: 800px;
-	text-align: center;
+	text-align: left;
 	font-family: Arial, Verdana, sans-serif;
 	background-color:rgb(245, 245, 245);
 	border-spacing: 0px;
@@ -125,7 +125,7 @@ padding: 5px;
 }
 
 table.menu{
-	width: 400px;
+	width: 800px;
 	text-align: center;
 	font-family: Arial, Verdana, sans-serif;
 	border-spacing: 0px;
