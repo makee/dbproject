@@ -328,71 +328,155 @@ if ($_GET['action'] == 'advanced' && isset($_GET['type']))
 {
 	$query = array(
 		'A' => "	 
-		SELECT a.aname
-		, a.aid 
-		FROM athlete a
-		GROUP BY a.aid
-		, a.aname
-		HAVING a.aid IN
+		SELECT 
+		athleteSW.aname
+		, athleteSW.aid
+		FROM athlete athleteSW
+		GROUP BY athleteSW.aid
+		, athleteSW.aname
+		HAVING athleteSW.aid IN
 		(
 		 (
-		  SELECT p1.aid 
-		  FROM participation p1
-		  , game g1
-		  WHERE p1.gid=g1.gid 
-		  AND g1.season='s' 
-		  AND p1.medal <>0
+		  SELECT partS.aid 
+		  FROM participation partS
+		  , game gameS
+		  WHERE partS.gid=gameS.gid 
+		  AND gameS.season='s' 
+		  AND partS.medal <>0
 		 )
 		 INTERSECT
 		 (
-		  SELECT p2.aid 
-		  FROM participation p2
-		  , game g2
-		  WHERE p2.gid=g2.gid 
-		  AND g2.season='w' 
-		  AND p2.medal <>0
+		  SELECT partW.aid 
+		  FROM participation partW
+		  , game gameW
+		  WHERE partW.gid=gameW.gid 
+		  AND gameW.season='w' 
+		  AND partW.medal <>0
 		 )
-	)",
+		)
+",
 		'B' => "
-				SELECT a.aname 
-				FROM athlete a
-				, participation p
-				WHERE a.aid=p.aid 
-				AND p.medal=1 
-				AND a.aid NOT IN 
+				SELECT athleteOnce.aname 
+				FROM athlete athleteOnce
+				, participation partGold
+				WHERE athleteOnce.aid=partGold.aid 
+				AND partGold.medal=1 
+				AND athleteOnce.aid NOT IN 
 				(
-				 SELECT p1.aid 
-				 FROM participation p1
-				 , participation p2 
-				 WHERE p1.aid=p2.aid 
-				 AND p1.gid<>p2.gid
+				 SELECT partNot.aid 
+				 FROM participation partNot
+				 , participation partNot2 
+				 WHERE partNot.aid=partNot2.aid 
+				 AND partNot.gid<>partNot2.gid
 				)
-				GROUP BY a.aname
+				GROUP BY athleteOnce.aname
 	",
 		'C' => "
-				SELECT c1.cname
-				, g1.gid
-				, g1.year 
-				FROM participation p1
-				, represents r1
-				, game g1
-				, country c1
-				WHERE p1.medal <> 0 
-				AND p1.aid=r1.aid 
-				AND g1.gid=r1.gid 
-				AND c1.iocCode=r1.iocCode
-				GROUP BY c1.cname
-				, r1.iocCode
-				, g1.gidi
-				, g1.year HAVING g1.year <= ALL 
+				SELECT countryMedal.cname
+				, gameFirst.gid
+				, gameFirst.year 
+				FROM participation partMedal
+				, represents reprCountry
+				, game gameFirst
+				, country countryMedal
+				WHERE partMedal.medal <>0 
+				AND partMedal.aid=reprCountry.aid 
+				AND gameFirst.gid=reprCountry.gid 
+				AND countryMedal.iocCode=reprCountry.iocCode
+				GROUP BY countryMedal.cname
+				, reprCountry.iocCode
+				, gameFirst.gid
+				, gameFirst.year 
+				HAVING gameFirst.year <= ALL 
 				(
-				 SELECT g2.year 
-				 FROM game g2
-				 , represents r2 
-				 WHERE r2.iocCode=r1.iocCode
-				 AND r2.gid=g2.gid
-				)
-	"
+				 SELECT gamePart.year 
+				 FROM game gamePart
+				 , represents reprCountry2 
+				 WHERE reprCountry2.iocCode=reprCountry.iocCode
+				 AND reprCountry2.gid=gamePart.gid
+				) ",
+		'D' => "
+		SELECT
+		(
+		 SELECT MASMax.iocCode 
+		 FROM MedalsAll MASMax
+		 GROUP BY MASMax.iocCode
+		 , MASMax.season
+		 HAVING MASMax.season='s' 
+		 AND Count(MASMax.iocCode) >= ALL
+		 (
+		  SELECT Count(MAS.iocCode) 
+		  FROM MedalsAll MAS
+		  WHERE MAS.season='s'
+		  GROUP BY MAS.iocCode
+		 )
+		) AS 'Summer Games',
+		(
+		 SELECT MAWMax.iocCode 
+		 FROM MedalsAll MAWMax 
+		 GROUP BY MAWMax.iocCode
+		 , MAWMax.season 
+		 HAVING MAWMax.season='w' 
+		 AND Count(MAWMax.iocCode) >= ALL
+		 (
+		  SELECT Count(MAW.iocCode) 
+		  FROM MedalsAll MAW
+		  WHERE MAW.season='w'
+		  GROUP BY MAW.iocCode
+		 )
+		) AS 'Winter Games'",
+		'E' => "
+		SELECT gamesHost.city 
+		FROM game gamesHost
+		, game gamesHostAgain
+		WHERE gamesHost.gid <> gamesHostAgain.gid 
+		AND gamesHost.city = gamesHostAgain.city
+		GROUP BY gamesHost.city
+		",
+		'F' => "
+		SELECT athleteMore.aname
+		FROM athlete athleteMore
+		, represents reprMore
+		WHERE athleteMore.aid=reprMore.aid 
+		AND reprMore.aid IN
+		(
+		 SELECT reprCountry1.aid 
+		 FROM represents reprCountry1
+		 , represents reprCountry2
+		 WHERE reprCountry1.aid=reprCountry2.aid 
+		 AND reprCountry1.iocCode <> reprCountry2.iocCode
+		)
+		GROUP BY athleteMore.aname
+		",
+		'G' => "
+		SELECT MaxRC.gameID
+		, MaxRC.IOCCode
+		, MaxRC.nbParticipants
+		FROM RepresentantsCountry MaxRC
+		WHERE MaxRC.nbParticipants >= ALL 
+		(
+		 SELECT RC.nbParticipants 
+		 FROM RepresentantsCountry RC
+		 WHERE RC.IOCCode<>MaxRC.IOCCode 
+		 AND RC.gameID=MaxRC.gameID
+		)
+		GROUP BY MaxRC.gameID
+		, MaxRC.IOCCode
+		, MaxRC.nbParticipants 
+		",
+		'H' => "
+		SELECT CountryNever.cname 
+		FROM country CountryNever
+		WHERE CountryNever.iocCode NOT IN 
+		(
+		 SELECT reprCountryMedal.iocCode 
+		 FROM represents reprCountryMedal
+		 , participation partMedals
+		 WHERE reprCountryMedal.aid = partMedals.aid 
+		 AND partMedals.medal <>0
+		)
+		GROUP BY CountryNever.cname
+		"
 	);
 	$id_bind = array(
 		'aid' => 'aname',
