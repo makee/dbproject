@@ -17,6 +17,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 	{
 		if ($ct >= $_GET['min'] && $ct < $_GET['max'])
 		{
+		
 			$coun = $medal[0];
 			$spo = $medal[1];
 			$disc = $medal[3];
@@ -128,6 +129,10 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 			}
 
 			echo "<br>";
+		}
+		if ($ct == $_GET['max'])
+		{
+			echo "<script type='text/javascript'>window.location = 'http://dbproject13.azurewebsites.net/correctMedal.php?min=$ct&max=" . ($ct + 10) ."&athl=oui&part=oui' </script>";
 		}
 		$ct++;
 	}
