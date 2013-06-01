@@ -86,7 +86,7 @@ class Discipline
 		}
 		if (
 				($ddunit != $this->ddunit && $ddunit != "") // diff unit and imported not empty
-				|| ($dwunit != $this->ddunit && $ddunit != "")// diff unit
+				|| ($dwunit != $this->dwunit && $dwunit != "")// diff unit
 				|| ($dminweight != $this->dminweight && $dminweight != -1) // diff min weight but imported defined
 				|| ($dmaxweight != $this->dmaxweight && $dmaxweight != -1)// diff min weight but imported defined
 				|| ($ddist != $this->ddist && $ddist != -1)// diff dist but imported defined
@@ -106,7 +106,6 @@ class Discipline
 		{
 			$$key = $val;
 		}
-		$DID = IDgen($drest, "Discipline", "did", true); 
 		$query = "INSERT INTO Discipline (did, dname, dgender, dminweight, dmaxweight, dwunit, ddist, ddunit, dteam, dcat, sid) VALUES ('$DID', ?, $dgender, $dminweight, $dmaxweight, '$dwunit', '$ddist', '$ddunit', '$dteam', '$dcat', '$sid')";
 		$stt = $conn->prepare($query);
 		$stt->execute((array)$drest);

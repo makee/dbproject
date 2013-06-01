@@ -57,6 +57,7 @@ function tableResult(dir)
 	if(dir)
 	{
 		dispButtonAdd();
+		$('#query').hide();
 		$("table.menu td:not(.current)").unbind('click').click(function(){
 			//$("div.wrapadd").remove();
 			$("table.onglet tr.add").remove();
@@ -167,12 +168,24 @@ function getAdvancedResult(query)
 		},
 		dataType: "xml",  
 		success: function(xml){
-			$(xml).find('results').each(function(){
-				$(this).find('row').each(function(){
-					$(this).children().each(function(){
-						alert((this).nodeName + ' : ' + $(this).text());
-					});
-				});	
+				
+			headers = new Array();
+			$(xml).find('results').first().find('row').first().children().each(function(){
+				hname = (this).nodeName;
+				hname = hname.replace(/aname/, 'Athlete');
+				hname = hname.replace(/aid/, 'AID');
+				headers.push(hname);	
+			});
+			$('#query').append('<thead></thead>').show();
+			for (i=0; i<headers.length; i++)
+			{
+				$('#query thead').append('<th>' + headers[i] + '</th>');
+			}
+			$(xml).find('results').first().find('row').each(function(){
+				$('#query').append('<tr></tr>');	
+				$(this).children().each(function(){
+					$('#query tr:last').append('<td>' + $(this).text() + '</td>');	
+				});
 			});
 		}
 	});
@@ -251,7 +264,7 @@ $(document).ready(function() {
 	$("table").hide();	
 	
 	$("p.advancedsearch").click(function(){
-	TINY.box.show({iframe:'advancedSearch.html',width:400,height:435,close:false,boxid:'frameless'})
+		TINY.box.show({iframe:'advancedSearch.html',width:400,height:435,close:false,boxid:'frameless'})
 	});
 	query = location.search.match(/\?query=(.)/);
 	if(query)
@@ -317,6 +330,11 @@ $(document).ready(function() {
    <tbody>
    </tbody>
 </table>
+
+<table class="onglet" id="query">
+
+</table>
+
 
 
 <!-- Get results-->
