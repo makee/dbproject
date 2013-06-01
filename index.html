@@ -163,12 +163,17 @@ function getAdvancedResult(query)
 		url: "queries.php",  
 		data:{
 			action:'advanced',
-			type: query,
+			type: query
 		},
 		dataType: "xml",  
 		success: function(xml){
-			test = $(xml).find('result').first().find('row').first().text();
-			alert(test);
+			$(xml).find('results').each(function(){
+				$(this).find('row').each(function(){
+					$(this).children().each(function(){
+						alert((this).nodeName + ' : ' + $(this).text());
+					});
+				});	
+			});
 		}
 	});
 }
@@ -212,8 +217,7 @@ function parseXml(xml)
 
 
 $(document).ready(function() {  	
-
-
+	
 	$("table#athlete").toggleClass('current');
 	//$("input#search").unbind('keypress').keypress(function(e){
 	//	if(e.which == 13) {
@@ -249,6 +253,9 @@ $(document).ready(function() {
 	$("p.advancedsearch").click(function(){
 	TINY.box.show({iframe:'advancedSearch.html',width:400,height:435,close:false,boxid:'frameless'})
 	});
+	query = location.search.match(/\?query=(.)/);
+	if(query)
+		getAdvancedResult(query[1]);
 });
 </script>
 
