@@ -40,7 +40,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 			preg_match('/^\d{4}/', $medal[2], $ye);
 			preg_match('/winter|summer/i', $medal[2], $seas);
 			$seas = preg_replace(array('/winter/i', '/summer/i'), array('w', 's'), $seas[0]);
-			$med = preg_replace(array('/Gold medal/i', '/Silver medal/i', '/Bronze medal/i', '/^$/'), array(1, 3, 3, 0), $med); 
+			$med = preg_replace(array('/Gold medal/i', '/Silver medal/i', '/Bronze medal/i', '/^$/'), array(1, 2, 3, 0), $med); 
 	
 			$medGID = Game::findGame($ye[0], $seas);
 			echo $medGID->writeFullGame()."<br>";
