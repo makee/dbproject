@@ -9,7 +9,7 @@ body {
 
 #name{
 	font-family: Arial, Verdana, sans-serif;
-	color: rgba(255, 255, 255, 0.8);
+	color: #222;
 	font-size: 20pt;	
 	margin-left: 20px;
 	margin-top:0px;
@@ -41,7 +41,7 @@ td, th{
 
 tbody{
 	font-size: 9pt;
-	color: #222
+	color: #222;
 }
 
 table.row tbody tr:hover{
