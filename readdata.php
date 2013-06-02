@@ -75,6 +75,10 @@ if (isset($_GET['athlete']))
 			}
 		}
 	}
+	if ($ct == $_GET['max'])
+	{
+		echo "<script type='text/javascript'>window.location = 'readdata.php?min=$max&max=" . ($ct + 10) ."&athlete=12' </script>";
+	}
 }
 
 

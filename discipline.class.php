@@ -106,6 +106,7 @@ class Discipline
 		{
 			$$key = $val;
 		}
+		$DID = IDgen($drest, "Discipline", "did", true); 
 		$query = "INSERT INTO Discipline (did, dname, dgender, dminweight, dmaxweight, dwunit, ddist, ddunit, dteam, dcat, sid) VALUES ('$DID', ?, $dgender, $dminweight, $dmaxweight, '$dwunit', '$ddist', '$ddunit', '$dteam', '$dcat', '$sid')";
 		$stt = $conn->prepare($query);
 		$stt->execute((array)$drest);

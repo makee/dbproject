@@ -8,6 +8,7 @@ function addTree2Node($dom, &$root, $tree)
 	if ($tree != '')
 	{
 		$d = new DomDocument("1.0", "UCS-2");
+		$tree = utf8_encode($tree);
 		$d->loadXML($tree);
 		$root->appendChild($dom->importNode($d->documentElement, true));
 	}
@@ -262,6 +263,7 @@ if ($_GET['action'] == 'get_game' && isset($_GET['type']))
 	$xmlDat = $dom->saveXML($root);
 	echo $xmlDat;
 }
+
 
 if ($_GET['action'] == 'globalquery' && isset($_GET['keyword']))
 {
