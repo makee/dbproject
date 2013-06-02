@@ -17,12 +17,14 @@ class Country
 	{
 		global $conn;
 		//$country = utf8_encode($country);
-		$country = "%$country%";
+//		$country = "%$country%";
 		$medIOC = $conn->prepare("SELECT iocCode, cname FROM Country WHERE cname LIKE ?");
 		$medIOC->execute(array($country));
 		$medIOC = $medIOC->fetchAll(PDO::FETCH_CLASS, "Country");
 		if (empty($medIOC))
+		{
 			return false;
+		}
 		else
 			return $medIOC[0];	
 	}

@@ -6,6 +6,7 @@ include_once('country.class.php');
 include_once('sport.class.php');
 include_once('discipline.class.php');
 include_once('game.class.php');
+include_once('functions.php');
 
 class Participation
 {

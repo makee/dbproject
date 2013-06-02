@@ -196,7 +196,7 @@ class Discipline
 			{
 				$disc = $dom->createElement('discipline');
 				$temp = Discipline::getDiscipline($s['did'])->display();
-				$temp = $temp[0];
+				$temp = $temp[1];
 				$dname = $dom->createElement('dname', $temp);
 				$sname = $dom->createElement('sname', utf8_encode($s['sname']));
 				$disc->setAttribute('did', $s['did']);

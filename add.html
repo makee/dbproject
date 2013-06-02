@@ -7,7 +7,71 @@
 <script type="text/javascript" src="https://ajax.microsoft.com/ajax/jQuery/jquery-1.4.2.min.js"></script>
 <script> 
 
+$(document).ready(function(){
+		
+		$.ajax({  
+			type: "GET",  
+			url: "get_list.php",  
+			data:{
+				type:'game'
+			},
+			dataType: "xml",  
+			success: function(xml){
+				$(xml).find('result').first().find('item').each(function(){
+					$('#glist').append('<option value="'+ $(this).attr('id') +'">' + $(this).text() + '</option>');	
+				});
+			}
+		});
+		$.ajax({  
+			type: "GET",  
+			url: "get_list.php",  
+			data:{
+				type:'country'
+			},
+			dataType: "xml",  
+			success: function(xml){
+				$(xml).find('result').first().find('item').each(function(){
+					$('#clist').append('<option value="'+ $(this).attr('id') + '">' +$(this).text() + '</option>');	
+				});
+			}
+		});
+		$.ajax({  
+			type: "GET",  
+			url: "get_list.php",  
+			data:{
+				type:'sport'
+			},
+			dataType: "xml",  
+			success: function(xml){
+				$(xml).find('result').first().find('item').each(function(){
+					$('#slist').append('<option value="'+ $(this).attr('id') +'">' + $(this).text() + '</option>');	
+				});
+			}
+		});
+		$('#slist').change(function(){
+			$.ajax({  
+			type: "GET",  
+			url: "get_list.php",  
+			data:{
+				type:'discipline',
+				sport:$('#slist').val()
+			},
+			dataType: "xml",  
+			success: function(xml){
+					$('#dlist').empty();
+				$(xml).find('result').first().find('item').each(function(){
+					$('#dlist').append('<option value="' + $(this).attr('id') + '">' + $(this).text() + '</option>');	
+				});
+			},
+			error:function(){
+				alert('error');
+			}
+		});
 
+		});
+
+
+});
 
 
 
@@ -20,36 +84,30 @@ In which category do you want to add data ?
 <p>Athlete
 <table>
 <tr>
-<form name="input" action="html_form_action.asp" method="get"><td>Name	<input type="text" name="athletename">
-</td>
+<form name="input" action="insert_data.php?action=insert_athl" method="get">
+<td>Name	<input type="text" name="athlname"> </td>
+<input type="hidden" name="action" value="insert_athl">
 
-<td>Olympic Games<select>	<option>Choose Olympic Game</option>
-							<option>Sydney 2000</option>
-							<option>Calgary 1988</option>
-		</select></td>
-
-<td>Country<select>			<option>Choose Country</option>
-							<option>Germany</option>
-							<option>Switzerland</option>
+<td>Olympic Games<select id="glist" name="athlolymp">	<option value="0">Choose Olympic Game</option>
 		</select></td>
 
-<td>Sport<select>			<option>Choose Sport</option>
-							<option>Football</option>
-							<option>Athletics</option>
+<td>Country<select id="clist" name="athlcoun">			<option value="0">Choose Country</option>
 		</select></td>
-<td>Discipline<select>		<option>Choose Discipline</option>
-							<option>100m Crawl</option>
-							<option>1000 m Sprint</option>
+
+<td>Sport<select id="slist" name="athlspo">			<option value="0">Choose Sport</option>
 		</select></td>
-<td>Medal<select>			<option>Select Medal</option>
-							<option>Gold</option>
-							<option>Silver</option>
-							<option>Bronze</option>
+<td>Discipline<select id="dlist" name="athldisc">		<option value="0">Choose Discipline</option>
 		</select></td>
+<td>Medal<select name="athlmed">			<option value="0">Select Medal</option>
+							<option value="1">Gold</option>
+							<option value="2">Silver</option>
+							<option value="3">Bronze</option>
+		</select></td>
+<input type="submit" value="Submit">
 </tr></form>
 
 </table>
-</p><input type="submit" value="Submit">
+</p>
 
 
 

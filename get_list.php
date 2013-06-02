@@ -19,7 +19,12 @@ function get_list($table, $where = false)
 	return $res;
 }
 if (isset($_GET['sport']))
+{
 	$sport = $_GET['sport'];
+	$sport = utf8_encode($sport);
+	$sport = Sport::findSport($sport);
+	$sport = $sport->sid;
+}
 else
 	$sport = false;
 $list = get_list($table = $_GET['type'], $sport);
@@ -35,26 +40,26 @@ switch ($table)
 	case "sport":
 	foreach ($list as $s)
 	{
-		$list_fin[] = $s->sname;
+		$list_fin[$s->sid] = $s->sname;
 	}
 	break;
 	case "country":
 	foreach ($list as $coun)
 	{
-		$list_fin[] = $coun->cname;
+		$list_fin[$coun->iocCode] = $coun->cname;
 	}
 	break;
 	case "game":
 	foreach ($list as $g)
 	{
-		$list_fin[] = $g->writeFullGame();
+		$list_fin[$g->gid] = $g->writeFullGame();
 	}
 	break;
 	case "discipline":
 	foreach ($list as $d)
 	{
 		$dname = $d->display();
-		$list_fin[] = $dname[1];
+		$list_fin[$dname[0]] = $dname[1];
 	}
 	break;
 
@@ -62,9 +67,10 @@ switch ($table)
 }
 $dom = new DomDocument("1.0", "UCS-2");
 $root = $dom->createElement('result');
-foreach ($list_fin as $item)
+foreach ($list_fin as $key => $item)
 {
 	$k = $dom->createElement('item', utf8_encode($item));
+	$k->setAttribute('id', $key);
 	$root->appendChild($k);
 }
 echo $dom->saveXML($root);
