@@ -48,7 +48,7 @@ class Sport
 	{
 		global $conn;
 		$sport = $conn->query("
-			SELECT TOP 10
+			SELECT 
 				d.did
 				, g.* 
 				, s.sname
