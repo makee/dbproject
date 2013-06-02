@@ -229,7 +229,7 @@ function parseXml(xml)
 		sid = $(this).attr("sid");	
 		$("#sport").append('<tr id="sid-' + sid + '">' + '<td>' + sid + '</td>' + '<td>' + $(this).find("sname").text() + '</td>' +' </tr>');  
 	});  
-		$("td:[targ='sport'] span.number").empty().append(' ('+$(xml).find("athletes>athlete").length+')');
+		$("td:[targ='sport'] span.number").empty().append(' ('+$(xml).find("sports>sport").length+')');
 	$(xml).find("disciplines>discipline").each(function() {  
 		did = $(this).attr("did");	
 		$("#discipline").append('<tr id="did-' + did + '">' + '<td>' + did+ '</td>' + '<td>' + $(this).find("dname").text() + '</td>'+ '<td>' + $(this).find("sname").text() + '</td>' +' </tr>');  
@@ -261,7 +261,7 @@ function parseXml(xml)
 		$('table#game').append('<tr><td colspan=10><i>No result</i></td></tr>');
 	}
 	loadOnClick();
-	$('table#discipline tr').slice(1,2).hide();
+	//$('table#discipline tr').slice(1,2).hide();
 
 }; 
 
