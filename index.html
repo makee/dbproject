@@ -52,6 +52,10 @@ function dispButtonAdd(){
 	});
 }
 
+	$("p.advancedsearch").click(function(){
+		TINY.box.show({iframe:'add.html',width:800,height:500,close:false,boxid:'frameless'})
+	});
+
 function tableResult(dir)
 {
 	if(dir)
@@ -299,6 +303,8 @@ $(document).ready(function() {
 	$("p.advancedsearch").click(function(){
 		TINY.box.show({iframe:'advancedSearch.html',width:400,height:435,close:false,boxid:'frameless'})
 	});
+	
+	
 	query = location.search.match(/\?query=(.)/);
 	if(query)
 		getAdvancedResult(query[1]);

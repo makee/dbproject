@@ -107,7 +107,7 @@ table:not(.menu){
 	background-color:rgb(245, 245, 245);
 	border-spacing: 0px;
 	border: 1px solid rgba(200, 200, 200, 1);
-	margin: 0px auto;
+	margin: auto auto;
 	border-radius:         3px;
 	-moz-border-radius:    3px;
 	-o-border-radius:      3px;
@@ -118,6 +118,7 @@ thead{
 	font-size: 9pt;
 	background-color: rgb(220, 220, 220);
 	color: #111;
+	text-align: center;
 }
 
 td, th{
