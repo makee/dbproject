@@ -132,7 +132,7 @@ if ($reimport || $conn->query("SELECT COUNT(*) FROM Participation")->fetchColumn
 		}
 		if ($ct == $_GET['max'])
 		{
-			echo "<script type='text/javascript'>window.location = 'http://dbproject13.azurewebsites.net/correctMedal.php?min=$ct&max=" . ($ct + 10) ."&athl=oui&part=oui' </script>";
+			echo "<script type='text/javascript'>window.location = 'correctMedal.php?min=$ct&max=" . ($ct + 10) ."&athl=oui&part=oui' </script>";
 		}
 		$ct++;
 	}
