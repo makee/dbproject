@@ -25,9 +25,6 @@ function dispcrossAdd(){
 	$("img.button#add").unbind('click').click(function(){
 		TINY.box.show({iframe:'add.html',width:800,height:600,close:false,boxid:'frameless'})
 	});
-	$("img.button#add").hover(){
-	
-	}
 	
 	crossDelete = $("<div class='wrapdelete'><img src='img/crossDelete.png' id='delete' class='button delete'/></div>");
 	$("table.menu").first().prepend(crossDelete);
