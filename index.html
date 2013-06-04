@@ -23,19 +23,20 @@ function dispcrossAdd(){
 	crossAdd = $("<div class='wrapadd'><img src='img/crossAdd.png' id='add' class='button add'/></div>");
 	$("table.menu").first().prepend(crossAdd);
 	$("img.button#add").unbind('click').click(function(){
-
-		TINY.box.show({iframe:'add.html',width:400,height:435,close:false,boxid:'frameless'})
+		TINY.box.show({iframe:'add.html',width:800,height:600,close:false,boxid:'frameless'})
 	});
+	$("img.button#add").hover(){
 	
-	crossDelete = $("<div class='wrapcancel'><img src='img/crossDelete.png' id='cancel' class='button cancel'/></div>");
+	}
+	
+	crossDelete = $("<div class='wrapdelete'><img src='img/crossDelete.png' id='delete' class='button delete'/></div>");
 	$("table.menu").first().prepend(crossDelete);
-	$("img.button#cancel").click(function(){
+	$("img.button#delete").click(function(){
 		$("table.onglet.current tr.add").toggle();
 		$("img.button").remove();
 		tableResult(true);
-		});	
-	});
-}
+	});	
+};
 
 function tableResult(dir)
 {
@@ -303,7 +304,7 @@ $(document).ready(function() {
 	<img src="img/title.png" id="headimg" alt="Header picture"/>
         <input type="text" class ="search" onfocus="if(this.value == 'Search...') { this.value = ''; }" value = "Search..."></input>
         <label for="search" id="magnetizer" onclick="obj=document.getElementById('result').scrollIntoView();">Search</label>
-		<p class="advancedsearch">Advanced searches</p><p class="query">User query</p>
+		<p class="advancedsearch">Advanced searches</p><p class="userquery">User query</p>
 
     </form>
 <!-- End search field -->
@@ -350,6 +351,7 @@ $(document).ready(function() {
    <tbody>
    </tbody>
 </table>
+
 
 <div id="loading"></div>
 
