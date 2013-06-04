@@ -18,32 +18,17 @@ emptyInsert = function(item)
 	}
 }
 
-function dispButtonAdd(){
+function dispcrossAdd(){
 	$("div.wrapadd").remove();
-	buttonAdd = $("<div class='wrapadd'><img src='img/addData.png' id='add' class='button add'/></div>");
-	$("table.menu").first().prepend(buttonAdd);
+	crossAdd = $("<div class='wrapadd'><img src='img/crossAdd.png' id='add' class='button add'/></div>");
+	$("table.menu").first().prepend(crossAdd);
 	$("img.button#add").unbind('click').click(function(){
-	addDataRow();
-	$("div.wrapadd").hide();
-	
-	buttonValid = $("<div class='wrapvalid'><img src='img/validData.png' id='valid' class='button valid'/></div>");
-	$("table.menu").first().prepend(buttonValid);
-		tcurrent.find("thead").first().find("tr").first().children().each(function(){
-		val = $(this).text();
-		str = val.toLowerCase();
-		str = str.replace(/ /g, '');
-		str = str.replace(/id$/g, '');
-	});
-	$("img.button#valid").click(function(){
-		var input = $("input.addInfo").serializeArray();
-		keys = Object.keys(input);
-		for (var i in keys){
-		alert(input[i].name + ': ' + input[i].value);
-		}
+
+		TINY.box.show({iframe:'add.html',width:400,height:435,close:false,boxid:'frameless'})
 	});
 	
-	buttonCancel = $("<div class='wrapcancel'><img src='img/cancelData.png' id='cancel' class='button cancel'/></div>");
-	$("table.menu").first().prepend(buttonCancel);
+	crossDelete = $("<div class='wrapcancel'><img src='img/crossDelete.png' id='cancel' class='button cancel'/></div>");
+	$("table.menu").first().prepend(crossDelete);
 	$("img.button#cancel").click(function(){
 		$("table.onglet.current tr.add").toggle();
 		$("img.button").remove();
@@ -52,15 +37,11 @@ function dispButtonAdd(){
 	});
 }
 
-	$("p.advancedsearch").click(function(){
-		TINY.box.show({iframe:'add.html',width:800,height:500,close:false,boxid:'frameless'})
-	});
-
 function tableResult(dir)
 {
 	if(dir)
 	{
-		dispButtonAdd();
+		dispcrossAdd();
 		$('#query').hide();
 		$("table.menu td:not(.current)").unbind('click').click(function(){
 			//$("div.wrapadd").remove();
@@ -81,7 +62,7 @@ function tableResult(dir)
 
 function addDataRow()
 {
-	//dispButtonAdd();
+	//dispcrossAdd();
 	current = $("table.menu td.current").attr('targ');
 	tcurrent = $("body").find("table.onglet#"+current);
 	$("table.menu, table.onglet.current").show();
@@ -322,7 +303,7 @@ $(document).ready(function() {
 	<img src="img/title.png" id="headimg" alt="Header picture"/>
         <input type="text" class ="search" onfocus="if(this.value == 'Search...') { this.value = ''; }" value = "Search..."></input>
         <label for="search" id="magnetizer" onclick="obj=document.getElementById('result').scrollIntoView();">Search</label>
-		<p class="advancedsearch">Advanced search</p>
+		<p class="advancedsearch">Advanced searches</p><p class="query">User query</p>
 
     </form>
 <!-- End search field -->

@@ -90,14 +90,18 @@ label {
     width: 16px;
 }
 
-p.advancedsearch {
+p.advancedsearch , p.query {
 	text-align: center;
 	font-family: Arial, Verdana, sans-serif;
 	font-size: 9pt;
-	color: rgb(255, 255, 255) ;
-	margin-top: 20px;
-	text-shadow: 0px 0px 1px #000;
+	color: rgba(255, 255, 255,0.8) ;
+	margin-top: 8px;
 	cursor:pointer;
+}
+
+p.advancedsearch:hover, p.query:hover {
+color: rgb(255, 255, 255);
+text-shadow: 0px 0px 2px #222;
 }
 
 table:not(.menu){
