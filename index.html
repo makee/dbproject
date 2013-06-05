@@ -19,11 +19,13 @@ emptyInsert = function(item)
 }
 
 function dispcrossAdd(){
+	current = $("table.menu td.current").attr('targ');
+	
 	$("div.wrapadd").remove();
 	crossAdd = $("<div class='wrapadd'><img src='img/crossAdd.png' id='add' class='button add'/></div>");
 	$("table.menu").first().prepend(crossAdd);
 	$("img.button#add").unbind('click').click(function(){
-		TINY.box.show({iframe:'add.html',width:800,height:600,close:false,boxid:'frameless'});
+		TINY.box.show({iframe:'add.html?'+ current,width:800,height:600,close:false,boxid:'frameless'});
 	});
 	
 	$("img.button#add").hover(function(){

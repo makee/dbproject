@@ -3,12 +3,30 @@
 
 <head>
 <meta charset="utf-8" />
-<link rel="stylesheet" href="details.css" />
+<link rel="stylesheet" href="add.css" />
+
 <script type="text/javascript" src="https://ajax.microsoft.com/ajax/jQuery/jquery-1.4.2.min.js"></script>
+
 <script> 
 
+
 $(document).ready(function(){
+	// Get category
+	
+	var url = window.location.href;
+	var qparts = url.split("?");
+	if (qparts.length == 0)
+	{
+		  return "";
+	}
+	var cat = qparts[1];
+
+	// Switch form
 		
+	$(".container div:not(." + cat + ")").hide();
+	
+	// Get xml
+	
 		$.ajax({  
 			type: "GET",  
 			url: "get_list.php",  
@@ -69,7 +87,7 @@ $(document).ready(function(){
 		});
 
 		});
-
+		
 
 });
 
@@ -78,78 +96,85 @@ $(document).ready(function(){
 </script> 
 </head>
 
-<div id = "choosecat">
-In which category do you want to add data ? 
+<div class = "container">
 
-<p>Athlete
-<table>
-<tr>
+<div class = "athlete header"><h1>Add an athlete</h1></div>
+<div class = "athlete">
+
+
 <form name="input" action="insert_data.php?action=insert_athl" method="get">
-<td>Name	<input type="text" name="athlname"> </td>
-<input type="hidden" name="action" value="insert_athl">
+<table>
+<tr><td>Name</td><td><input type="text" name="athlname"></td><td><input type="hidden" name="action" value="insert_athl"></td></tr>
 
-<td>Olympic Games<select id="glist" name="athlolymp">	<option value="0">Choose Olympic Game</option>
-		</select></td>
 
-<td>Country<select id="clist" name="athlcoun">			<option value="0">Choose Country</option>
-		</select></td>
+<tr><td>Olympic Games</td><td><select id="glist" name="athlolymp">
+	<option value="0">Choose Olympic Game</option>
+</select></td></tr>
 
-<td>Sport<select id="slist" name="athlspo">			<option value="0">Choose Sport</option>
-		</select></td>
-<td>Discipline<select id="dlist" name="athldisc">		<option value="0">Choose Discipline</option>
-		</select></td>
-<td>Medal<select name="athlmed">			<option value="0">Select Medal</option>
+<tr><td>Country</td><td><select id="clist" name="athlcoun">	
+	<option value="0">Choose Country</option>
+</select></td></tr>
+<tr><td>Sport</td><td><select id="slist" name="athlspo">			<option value="0">Choose Sport</option>
+		</select></td></tr>
+<tr><td>Discipline</td><td><select id="dlist" name="athldisc">		<option value="0">Choose Discipline</option>
+		</select></td></tr>
+<tr><td>Medal</td><td><select name="athlmed">			<option value="0">Select Medal</option>
 							<option value="1">Gold</option>
 							<option value="2">Silver</option>
 							<option value="3">Bronze</option>
-		</select></td>
-<input type="submit" value="Submit">
-</tr></form>
+		</select></td></tr>
+<tr><td><input type="submit" value="Submit"></td></tr>
+
 
 </table>
-</p>
+</form>
 
+</div>
 
-
-<p>Olympic Game
+<div class = "game">
+<div class = "header"><h1>Add an olympic Game</h1></div>
 <table>
-<tr>
-<form name="input" action="html_form_action.asp" method="get">
-<td>Year<select>	<option>Choose Year</option>
+<table>
+<tr><form name="input" action="html_form_action.asp" method="get">
+<tr><td>Year</td><td><select>	<option>Choose Year</option>
 							<option>2013</option>
 							<option>2012</option>
 							<option>2011</option>
-		</select></td>
-<td>Season<select>	<option>Choose Seasaon</option>
+		</select></td></tr>
+<tr><td>Season</td><td><select>	<option>Choose Seasaon</option>
 							<option>Summer</option>
 							<option>Winter</option>
-		</select></td>
-<td>Country<select>			<option>Choose Country</option>
+		</select></td></tr>
+<tr><td>Country</td><td><select>			<option>Choose Country</option>
 							<option>Germany</option>
 							<option>Switzerland</option>
-		</select></td>	
+		</select></td></tr>
 		
 		
-<td><form>City	<input type="text" name="cityname">
-</form></td>
+<tr><td>City</td><td><form><input type="text" name="cityname">
+</form></td></tr>
 
 </tr></form>
 </table>
 </p><input type="submit" value="Submit">
+</div>
 
-<p>Country
+
+<div class = "country">
+<div class = "header"><h1>Add a country</h1></div>
 <table>
 <tr>
 <form name="input" action="html_form_action.asp" method="get"><td>Name	<input type="text" name="athletename">
 </td>		
 <form name="input" action="html_form_action.asp" method="get"><td>IOC Code	<input type="text" name="athletename">
 </td>
-
 </tr></form>
 </table>
 </p><input type="submit" value="Submit">
+</div>
 
-<p>Sport
+<div class = "sport">
+<div class = "header"><h1>Add a sport</h1></div>
 <table>
 <tr>
 <form name="input" action="html_form_action.asp" method="get"><td>Name	<input type="text" name="athletename">
@@ -158,8 +183,11 @@ In which category do you want to add data ?
 </tr></form>
 </table>
 </p><input type="submit" value="Submit">
+</div>
 
-<p>Discipline
+
+<div class = "discipline">
+<div class = "header"><h1>Add a discipline</h1></div>
 <table>
 <tr>
 <form name="input" action="html_form_action.asp" method="get">
@@ -174,6 +202,8 @@ In which category do you want to add data ?
 </table>
 </p><input type="submit" value="Submit">
 
+
+</div>
 
 </div>
 
