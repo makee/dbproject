@@ -144,7 +144,8 @@ table.menu td:not(.current):hover{
 
 table:not(.menu) tbody{
 	font-size: 9pt;
-	color: #222}
+	color: #222;
+}
 
 .onglet:not(.current){
 	display:none;

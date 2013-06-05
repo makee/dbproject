@@ -25,7 +25,7 @@ function dispcrossAdd(){
 	crossAdd = $("<div class='wrapadd'><img src='img/crossAdd.png' id='add' class='button add'/></div>");
 	$("table.menu").first().prepend(crossAdd);
 	$("img.button#add").unbind('click').click(function(){
-		TINY.box.show({iframe:'add.html?'+ current,width:800,height:600,close:false,boxid:'frameless'});
+		TINY.box.show({iframe:'add.html?'+ current,width:400,height:500,close:false,boxid:'frameless'});
 	});
 	
 	$("img.button#add").hover(function(){
@@ -263,7 +263,11 @@ $(document).ready(function() {
 	$("table").hide();	
 	
 	$("p.advancedsearch").click(function(){
-		TINY.box.show({iframe:'advancedSearch.html',width:400,height:435,close:false,boxid:'frameless'})
+		TINY.box.show({iframe:'advancedSearch.html',width:600,height:600,close:false,boxid:'frameless'})
+	});
+	
+	$("p.userquery").click(function(){
+		TINY.box.show({iframe:'query.html',width:400,height:500,close:false,boxid:'frameless'})
 	});
 	
 	
