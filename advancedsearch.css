@@ -47,7 +47,6 @@ thead{
 
 table tbody tr:hover{
 	background-color: rgb(240, 240, 240);
-	cursor:pointer;
 }
 
 a {
