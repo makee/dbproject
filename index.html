@@ -23,16 +23,26 @@ function dispcrossAdd(){
 	crossAdd = $("<div class='wrapadd'><img src='img/crossAdd.png' id='add' class='button add'/></div>");
 	$("table.menu").first().prepend(crossAdd);
 	$("img.button#add").unbind('click').click(function(){
-		TINY.box.show({iframe:'add.html',width:800,height:600,close:false,boxid:'frameless'})
+		TINY.box.show({iframe:'add.html',width:800,height:600,close:false,boxid:'frameless'});
+	});
+	
+	$("img.button#add").hover(function(){
+		$(this).attr('src', 'img/infoAdd.png');
+	}, function(){
+		$(this).attr('src', 'img/crossAdd.png');
 	});
 	
 	crossDelete = $("<div class='wrapdelete'><img src='img/crossDelete.png' id='delete' class='button delete'/></div>");
 	$("table.menu").first().prepend(crossDelete);
 	$("img.button#delete").click(function(){
-		$("table.onglet.current tr.add").toggle();
-		$("img.button").remove();
-		tableResult(true);
+	
 	});	
+	
+	$("img.button#delete").hover(function(){
+		$(this).attr('src', 'img/infoDelete.png');
+	}, function(){
+		$(this).attr('src', 'img/crossDelete.png');
+	});
 };
 
 function tableResult(dir)
@@ -55,35 +65,6 @@ function tableResult(dir)
 	else
 	{
 		$("table.menu td:not(.current)").unbind('click');
-	}
-}
-
-function addDataRow()
-{
-	//dispcrossAdd();
-	current = $("table.menu td.current").attr('targ');
-	tcurrent = $("body").find("table.onglet#"+current);
-	$("table.menu, table.onglet.current").show();
-	if (tcurrent.find("tr.add").length == 0)
-	{
-		tcurrent.prepend($("<tr class='add'></tr>")); // .append($("<form id='addInfo' name='addInfo' method='post'></form>"))
-		tcurrent.find("thead").first().find("tr").first().children().each(function(){
-			val = $(this).text();
-			str = val.toLowerCase();
-			str = str.replace(/ /g, '');
-			len = $(this).width()-30;
-			if (!str.match(/id$/g))
-				$("tr.add").append("<td><input style='width:" + len + "px;' class='addInfo' type='text' id='" + str + "' name='" + str + "' value='New " + val + "...'  onfocus='emptyInsert($(this))'/></td>");
-			else
-				$("tr.add").append("<td></td>");
-		});
-		tableResult(false);
-
-	}
-	else
-	{
-		tcurrent.find("tr.add").toggle();
-		tableResult(true);
 	}
 }
 

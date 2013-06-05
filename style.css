@@ -157,20 +157,20 @@ table.onglet tbody tr:hover{
 
 div.wrapadd{
 	position:relative;
-	right: 150px;
-	top: 30px;
+	right: 180px;
+	top: 70px;
 }
 
 
 div.wrapdelete{
 	position:relative;
-	left: 760px;
-	top: 30px;
+	left: 740px;
+	top: 70px;
 }
 
 img.button {
-	width: 35px;
-	height: 35px;
+	width: 90px;
+	height: 90px;
 	position: absolute;
 	margin-left:0px;
 	cursor:pointer;
@@ -191,5 +191,7 @@ img.button {
 }
 
 #loading{
+	padding-top:50px;
 	margin: 50 auto;
+	text-align:center;
 }
